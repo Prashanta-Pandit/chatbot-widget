@@ -1,5 +1,5 @@
 import React from "react";
-import ChatBotWidget from "react-chatbot-widget";
+import ChatBotWidget from "react-ai-chatbot-widget";
 import "./index.css";
 
 export default function App() {
