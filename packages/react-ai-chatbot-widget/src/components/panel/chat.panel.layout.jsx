@@ -1,10 +1,41 @@
-// components/ChatPanel.jsx
-import React from "react";
+import React, { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import ChatPanelForm from "./chat.panel.form";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
+import { handleChat } from "../../n8n/n8n";
 
 const ChatPanel = ({ onClose }) => {
+  const [messages, setMessages] = useState([
+    {
+      type: "bot",
+      text: "Hi! How can I assist you today?"
+    }
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const sendMessage = async (userMessage) => {
+    setIsLoading(true);
+
+    // Add user message to the chat
+    setMessages(prev => [...prev, { type: "user", text: userMessage }]);
+
+    try {
+      const metaData = await handleChat(userMessage);
+
+      const botText = metaData.response || "Something went wrong. Please try again.";
+      
+      setMessages(prev => [...prev, { type: "bot", text: botText }]);
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages(prev => [...prev, { 
+        type: "bot", 
+        text: "Sorry, something went wrong. Please try again." 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="fixed bottom-28 shadow-xl right-8 z-50 w-96 h-[520px] bg-white/90 backdrop-blur-xl rounded-2xl border border-gray-100 flex flex-col overflow-hidden">
       
@@ -34,10 +65,11 @@ const ChatPanel = ({ onClose }) => {
         </button>
       </div>
 
-      {/* Messages + Form */}
-      <div className="flex-1 flex flex-col">
-        <ChatPanelMessagesBox />
-      </div>
+      {/* Messages */}
+      <ChatPanelMessagesBox messages={messages} isLoading={isLoading} />
+
+      {/* Input Form */}
+      <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} />
 
       {/* Footer */}
       <div className="bg-gray-50 border-t border-gray-200 px-5 py-3 text-center flex-shrink-0">
@@ -50,4 +82,3 @@ const ChatPanel = ({ onClose }) => {
 };
 
 export default ChatPanel;
-
