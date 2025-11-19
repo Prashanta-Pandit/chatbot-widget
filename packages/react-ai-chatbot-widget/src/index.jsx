@@ -1,13 +1,21 @@
-import React from "react";
-import { MessageCircle } from "lucide-react"; // optional icon
+import { useState } from "react";
 import "./index.css";
+import ChatButton from "./components/chat.button.jsx";
+import ChatPanel from "./components/chat.panel.jsx";
 
 export default function ChatBotWidget() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleChat = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
-    <div
-        className="fixed bottom-7 right-7 w-16 h-16 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center cursor-pointer hover:bg-blue-700 transition"
-    >
-      <MessageCircle size={28} />
+    <div className="fixed bottom-7 right-7">
+      {isOpen &&
+        <ChatPanel onClose={toggleChat} /> 
+      }
+      <ChatButton onClick={toggleChat} />
     </div>
   );
 }
