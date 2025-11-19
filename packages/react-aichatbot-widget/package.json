@@ -1,15 +1,13 @@
 {
-  "name": "react-ai-chatbot-widget",
-  "version": "1.0.2",
+  "name": "react-aichatbot-widget",
+  "version": "1.0.0",
   "description": "A React ChatBot Widget",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "type": "module",
   "files": [
     "dist",
-    "index.css",
-    "index.d.ts"
+    "index.css"
   ],
   "scripts": {
     "build": "vite build",
