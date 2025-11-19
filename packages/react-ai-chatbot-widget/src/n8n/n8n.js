@@ -1,12 +1,10 @@
 import axios from 'axios';
-import { v4 as uuidv4 } from "uuid";
 
-const handleChat = async (input) => {
+const handleChat = async (input, sessionId) => {
 
-  const chatId = uuidv4(); // Generate a unique session ID for the chat session
   const payload = {
     chatInput: input,
-    sessionId: chatId,
+    sessionId,
     metadata: {
       pinecone_namespace: 'cloney-9d197663-1adf-4c45-901e-979d2d17d38b',
     }
@@ -21,8 +19,6 @@ const handleChat = async (input) => {
             }
         }
     );
-
-    console.log('API response:', result.data.output);
     const response = result.data.output;
     return response;
     

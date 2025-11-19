@@ -5,7 +5,7 @@ import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanel = ({ onClose }) => {
+const ChatPanel = ({ onClose, sessionId }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
@@ -22,7 +22,7 @@ const ChatPanel = ({ onClose }) => {
     setMessages((prev) => [...prev, { type: "user", text: userMessage }]);
 
     try {
-      const metaData = await handleChat(userMessage);
+      const metaData = await handleChat(userMessage, sessionId);
       const botText = metaData.response;
 
       setMessages((prev) => [...prev, { type: "bot", text: botText }]);
@@ -69,7 +69,7 @@ const ChatPanel = ({ onClose }) => {
 
       {/* Before submit → Show UserForm */}
       {!hasUserInfo && (
-        <ChatPanelUserForm handleMessageFromForm={handleMessageFromForm} />
+        <ChatPanelUserForm handleMessageFromForm={handleMessageFromForm} sessionId={sessionId} />
       )}
 
       {/* After submit → Show Chat UI */}

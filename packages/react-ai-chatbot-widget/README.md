@@ -29,6 +29,7 @@ npm install react react-dom tailwindcss lucide-react
 | `tailwindcss`  | ^4.1.17  |   |         |
 | `lucide-react` | ^0.554.0 |   |         |
 | `axios`        | ^1.6.0   |   |         |
+| `uuid`         | ^13.0.0  |   |         |
 
 ---
 
