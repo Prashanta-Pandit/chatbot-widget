@@ -5,7 +5,7 @@ import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanel = ({ onClose, sessionId }) => {
+const ChatPanel = ({ onClose, sessionId, pinecone_namespace }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
@@ -22,7 +22,7 @@ const ChatPanel = ({ onClose, sessionId }) => {
     setMessages((prev) => [...prev, { type: "user", text: userMessage }]);
 
     try {
-      const metaData = await handleChat(userMessage, sessionId);
+      const metaData = await handleChat(userMessage, sessionId, pinecone_namespace);
       const botText = metaData.response;
 
       setMessages((prev) => [...prev, { type: "bot", text: botText }]);
@@ -69,7 +69,7 @@ const ChatPanel = ({ onClose, sessionId }) => {
 
       {/* Before submit → Show UserForm */}
       {!hasUserInfo && (
-        <ChatPanelUserForm handleMessageFromForm={handleMessageFromForm} sessionId={sessionId} />
+        <ChatPanelUserForm handleMessageFromForm={handleMessageFromForm} sessionId={sessionId} pinecone_namespace={pinecone_namespace} />
       )}
 
       {/* After submit → Show Chat UI */}

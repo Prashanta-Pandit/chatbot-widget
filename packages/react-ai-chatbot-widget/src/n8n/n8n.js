@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const handleChat = async (input, sessionId) => {
+const handleChat = async (input, sessionId, pinecone_namespace) => {
 
   const payload = {
     chatInput: input,
     sessionId,
     metadata: {
-      pinecone_namespace: 'cloney-9d197663-1adf-4c45-901e-979d2d17d38b',
+      pinecone_namespace,
     }
   };
 

@@ -4,7 +4,7 @@ import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 import { v4 as uuidv4 } from "uuid";
 
-export default function ChatBotWidget() {
+export default function ChatBotWidget({ pinecone_namespace }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const [sessionId, setSessionId] = useState('');
@@ -21,7 +21,7 @@ export default function ChatBotWidget() {
   return (
     <div className="fixed bottom-7 right-7">
       {isOpen &&
-        <ChatPanel onClose={toggleChat} sessionId={sessionId} /> 
+        <ChatPanel onClose={toggleChat} sessionId={sessionId} pinecone_namespace={pinecone_namespace} /> 
       }
       <ChatButton onClick={toggleChat} />
     </div>
