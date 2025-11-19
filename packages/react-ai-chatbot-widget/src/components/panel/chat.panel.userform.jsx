@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pinecone_namespace }) => {
+const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace, chatbotHostURL }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -21,7 +21,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pinecone_namespac
     const message = `Hi, I am ${name} and my email is ${email}`;
 
     try {
-      const metaData = await handleChat(message, sessionId, pinecone_namespace);
+      const metaData = await handleChat(message, sessionId, pineconeNamespace, chatbotHostURL);
       const botText = metaData.response;
 
       // send message back to parent

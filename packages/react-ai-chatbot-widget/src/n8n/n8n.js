@@ -1,17 +1,18 @@
 import axios from 'axios';
 
-const handleChat = async (input, sessionId, pinecone_namespace) => {
+const handleChat = async (input, sessionId, pineconeNamespace, chatbotHostURL) => {
 
   const payload = {
     chatInput: input,
     sessionId,
     metadata: {
-      pinecone_namespace,
+      pinecone_namespace: pineconeNamespace,
     }
   };
 
   try {
-    const result = await axios.post ('https://n8n.clone67.com/webhook/860a03cc-0933-4645-98a4-56a8e6d9754e/chat',
+    const result = await axios.post (
+        chatbotHostURL,
         payload,
         {
             headers: {

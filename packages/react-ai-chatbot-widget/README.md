@@ -42,7 +42,11 @@ import ChatBotWidget from "react-ai-chatbot-widget";
 function App() {
   return (
     <div className="App">
-      <ChatBotWidget />
+    {/*add a namespace for chatbot and chatbot url*/}
+      <ChatBotWidget 
+        pineconeNamespace=''
+        chatbotHostURL='' 
+      />
     </div>
   );
 }
@@ -54,6 +58,6 @@ export default App;
 
 ## Notes
 
-* `axios` is bundled; no extra installation required.
+* `axios` & `uuid` is bundled; no extra installation required.
 * TailwindCSS is required if you want to customize styles.
 * React and ReactDOM must match the versions listed above.
