@@ -27,7 +27,7 @@ const ChatPanelForm = ({ onSendMessage, isLoading }) => {
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           disabled={isLoading}
-          className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-shadow placeholder-gray-400 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 px-4 py-3 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-shadow placeholder-neutral-400 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         />
         <button
           onClick={handleSubmit}

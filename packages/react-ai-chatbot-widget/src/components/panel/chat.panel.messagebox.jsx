@@ -13,14 +13,14 @@ const ChatPanelMessagesBox = ({ messages, isLoading }) => {
   }, [messages, isLoading]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50">
+    <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-neutral-50">
       {messages.map((msg, index) => (
         <div key={index} className={`flex ${msg.type === "user" ? "justify-end" : ""}`}>
           <div
-            className={`px-4 py-3 rounded-2xl shadow-sm border border-gray-200 max-w-[80%] text-sm leading-relaxed ${
+            className={`px-4 py-3 rounded-2xl shadow-sm border border-neutral-200 max-w-[80%] text-sm leading-relaxed ${
               msg.type === "user"
                 ? "bg-sky-600 text-white rounded-br-none"
-                : "bg-white text-gray-800 rounded-bl-none"
+                : "bg-white text-neutral-800 rounded-bl-none"
             }`}
           >
             {msg.text}
@@ -29,7 +29,7 @@ const ChatPanelMessagesBox = ({ messages, isLoading }) => {
       ))}
       {isLoading && (
         <div className="flex">
-          <div className="bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-200 max-w-[80%] text-sm leading-relaxed">
+          <div className="bg-white text-neutral-800 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-neutral-200 max-w-[80%] text-sm leading-relaxed">
             <Ellipsis className="animate-pulse" />
           </div>
         </div>
