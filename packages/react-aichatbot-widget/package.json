@@ -1,6 +1,6 @@
 {
   "name": "react-aichatbot-widget",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A React ChatBot Widget",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -10,6 +10,10 @@
     "index.css"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Prashanta-Pandit/chatbot-widget"
+  },
   "scripts": {
     "build": "vite build",
     "prepare": "npm run build"

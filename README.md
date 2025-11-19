@@ -1,16 +1,83 @@
-# React + Vite
+# React AI Chatbot Widget
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the `react-aichatbot-widget` npm package and a platform for local development and testing.
 
-Currently, two official plugins are available:
+## Project Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+/
+├── packages/react-aichatbot-widget/    # NPM package source code
+└── /                                   # Test workspace for development
+```
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### For Local Development & Testing
 
-## Expanding the ESLint configuration
+If you want to test the package locally, follow these steps:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Install dependencies for the package**
+   ```bash
+   cd packages
+   cd react-aichatbot-widget
+   npm install
+   ```
+
+2. **Link the package globally**
+   ```bash
+   npm link
+   ```
+
+3. **Go to your testing platform (or root folder)**
+   ```bash
+   cd ../
+   ```
+
+4. **Link the package to your test project**
+   ```bash
+   npm link react-aichatbot-widget
+   ```
+
+5. **Start developing!**
+   
+   ```bash
+   npm install
+   ```
+
+### For Production Use
+
+If you want to use this package in your own project:
+
+1. **Install the package from npm**
+   ```bash
+   npm install react-aichatbot-widget
+   ```
+
+2. **Import and use in your project**
+   ```javascript
+   import { ChatWidget } from 'react-aichatbot-widget';
+   
+   function App() {
+     return (
+       <div>
+         <ChatWidget 
+             //custom attributes
+         />
+       </div>
+     );
+   }
+   ```
+
+### Unlinking (when done testing)
+
+To unlink the package:
+
+    ```bash
+    # In your test project
+    npm unlink react-aichatbot-widget
+
+## For production use:
+
+For more information about version requirements, usage examples, visit:
+
+**NPM Package:** [https://www.npmjs.com/package/react-aichatbot-widget](https://www.npmjs.com/package/react-aichatbot-widget)
