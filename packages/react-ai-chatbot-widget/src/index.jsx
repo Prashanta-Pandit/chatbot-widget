@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./index.css";
 import ChatButton from "./components/chat.button.jsx";
-import ChatPanel from "./components/chat.panel.jsx";
+import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 
 export default function ChatBotWidget() {
   const [isOpen, setIsOpen] = useState(false);
