@@ -2,15 +2,11 @@ import React, { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import ChatPanelForm from "./chat.panel.form";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
+import ChatPanelUserForm from "./chat.panel.userform";
 import { handleChat } from "../../n8n/n8n";
 
 const ChatPanel = ({ onClose }) => {
-  const [messages, setMessages] = useState([
-    {
-      type: "bot",
-      text: "Hi! How can I assist you today?"
-    }
-  ]);
+  const [messages, setMessages] = useState([{}]);
   const [isLoading, setIsLoading] = useState(false);
 
   const sendMessage = async (userMessage) => {
@@ -65,11 +61,16 @@ const ChatPanel = ({ onClose }) => {
         </button>
       </div>
 
-      {/* Messages */}
-      <ChatPanelMessagesBox messages={messages} isLoading={isLoading} />
+      {
+        messages ? <ChatPanelUserForm /> : 
+          <>
+            {/* Messages */}
+            <ChatPanelMessagesBox messages={messages} isLoading={isLoading} />
 
-      {/* Input Form */}
-      <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} />
+            {/* Input Form */}
+            <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} />
+          </>
+      }
 
       {/* Footer */}
       <div className="bg-gray-50 border-t border-gray-200 px-5 py-3 text-center flex-shrink-0">
