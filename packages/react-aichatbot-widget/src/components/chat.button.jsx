@@ -1,19 +1,25 @@
-import React from "react";
-import { MessageCircle } from "lucide-react";
+// components/chat.button.jsx
+import { MessageCircle, X } from "lucide-react";
 
-const ChatButton = ({ onClick, primaryColor, secondaryColor, position, fontColor }) => {
-  const posClass = position === "left" ? "left-8" : "right-8";
-  console.log("ChatButton position:", position);
-  console.log('chatbot fontColor:', fontColor, primaryColor, secondaryColor);
+const ChatButton = ({ onClick, isOpen, theme, position = "right" }) => {
+  const pos = position === "left" ? "left-8" : "right-8";
 
   return (
     <button
       onClick={onClick}
-      aria-label="Open chat support"
-      className={`fixed bottom-8 ${posClass} w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-${primaryColor}/50 bg-gradient-to-br from-${primaryColor} to-${secondaryColor} text-${fontColor}`}
+      className={`fixed bottom-8 ${pos} pointer-events-auto w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-offset-2`}
+      style={{
+        background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
+        color: theme.fontColor,
+        boxShadow: `0 20px 25px -5px ${theme.primaryColor}40`,
+        ringColor: theme.primaryColor + "40",
+      }}
     >
-      <MessageCircle size={30} strokeWidth={2.2} />
-      <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white animate-pulse shadow-lg" />
+      {isOpen ? <X size={36} strokeWidth={2.5} /> : <MessageCircle size={36} strokeWidth={2.5} />}
+      
+      {!isOpen && (
+        <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-4 border-white animate-pulse" />
+      )}
     </button>
   );
 };
