@@ -14,7 +14,7 @@ export default function App() {
         primaryColor="#8b5cf6"      
         secondaryColor="#ec4899"    
         fontColor="#ffffff"
-        backgroundColor="#ffffff"  
+        backgroundColor="#000000"  
         position="right"
       />
     </>

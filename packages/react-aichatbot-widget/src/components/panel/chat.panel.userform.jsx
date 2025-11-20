@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace, chatbotHostURL, primaryColor, fontColor, backgroundColor }) => {
+const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace, chatbotHostURL, theme }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -41,7 +41,9 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
   };
 
   return (
-    <div className="p-5 border-t bg-white flex-shrink-0">
+    <div className="p-5 border-t flex-shrink-0"
+      style={{ background: theme.backgroundColor }}
+    >
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
          {error && (
@@ -50,14 +52,18 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
             </div>
         )}
 
-        <p className="text-neutral-700 text-sm font-medium">
+        <p className=" text-sm font-medium"
+          style = {{ color: `${theme.fontColor}` }}
+        >
           Please enter your details to get started.
         </p>
 
         <div className="flex flex-col gap-5">
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-neutral-700">Full Name</label>
+            <label className="text-sm"
+                  style = {{ color: `${theme.fontColor}` }}
+            >Full Name</label>
             <input
               type="text"
               placeholder="Enter your full name"
@@ -66,13 +72,16 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
                 setName(e.target.value)
                 setError('')
               }}
-              className={`w-full px-3 py-2 border border-neutral-300 rounded-xl bg-${backgroundColor}/5`}
+              className="w-full px-3 py-2 border border-neutral-300 rounded-xl"
+              style = {{ background: `${theme.backgroundColor}`, color: `${theme.fontColor}` }}
               required
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-neutral-700">Email Address</label>
+            <label className="text-sm"
+                  style = {{ color: `${theme.fontColor}` }}
+            >Email Address</label>
             <input
               type="email"
               placeholder="Enter your email"
@@ -81,7 +90,8 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
                 setEmail(e.target.value)
                 setError('')
               }}
-              className={`w-full px-3 py-2 border border-neutral-300 rounded-xl bg-${backgroundColor}/5`}
+              className="w-full px-3 py-2 border border-neutral-300 rounded-xl"
+              style = {{ background: `${theme.backgroundColor}`, color: `${theme.fontColor}` }}
               required
             />
           </div>
@@ -91,7 +101,11 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
         <button
           type="submit"
           disabled={!name.trim() || !email.trim() || isLoading}
-          className={`bg-${primaryColor} hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed text-${fontColor} px-5 py-3 rounded-xl font-medium flex items-center justify-center gap-2 mt-20`}
+          className="disabled:opacity-50 disabled:cursor-not-allowed px-5 py-3 rounded-xl font-medium flex items-center justify-center gap-2 mt-20"
+          style={{
+            background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
+            color: theme.fontColor
+          }}
         >
           {isLoading ? "Submitting..." : (<><Send size={18} /> Submit</>)}
         </button>
