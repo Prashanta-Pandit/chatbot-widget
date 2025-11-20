@@ -5,10 +5,12 @@ import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL }) => {
+const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL, primaryColor, secondaryColor, position, fontColor, backgroundColor }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
+
+  const posClass = position === "left" ? "left-8" : "right-8";
 
   // Called by UserForm once form submits successfully
   const handleMessageFromForm = (msgs) => {
@@ -38,16 +40,13 @@ const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL }) =>
   };
 
   return (
-    <div className="fixed bottom-28 shadow-xl right-8 z-50 w-96 h-[520px] bg-white/90 
-                    backdrop-blur-xl rounded-2xl border border-neutral-100 
-                    flex flex-col overflow-hidden">
+    <div className={`fixed bottom-28 shadow-xl ${posClass} z-50 w-96 h-[520px] bg-white/90 backdrop-blur-xl rounded-2xl border border-neutral-100 flex flex-col overflow-hidden`}>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-sky-500 to-sky-600 text-white px-5 py-4
-                      rounded-t-2xl flex items-center justify-between shadow-sm">
+      <div className={`bg-gradient-to-r from-${primaryColor} to-${secondaryColor} text-${fontColor} px-5 py-4 rounded-t-2xl flex items-center justify-between shadow-sm`}>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-11 h-11 bg-white/25 rounded-full flex items-center justify-center">
+            <div className={`w-11 h-11 bg-${backgroundColor}/25 rounded-full flex items-center justify-center`}>
               <MessageCircle size={22} />
             </div>
             <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-white" />
@@ -69,7 +68,15 @@ const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL }) =>
 
       {/* Before submit → Show UserForm */}
       {!hasUserInfo && (
-        <ChatPanelUserForm handleMessageFromForm={handleMessageFromForm} sessionId={sessionId} pineconeNamespace={pineconeNamespace} chatbotHostURL={chatbotHostURL} />
+        <ChatPanelUserForm 
+          handleMessageFromForm={handleMessageFromForm} 
+          sessionId={sessionId} 
+          pineconeNamespace={pineconeNamespace} 
+          chatbotHostURL={chatbotHostURL}
+          fontColor={fontColor} 
+          backgroundColor={backgroundColor}
+          primaryColor={primaryColor}
+        />
       )}
 
       {/* After submit → Show Chat UI */}

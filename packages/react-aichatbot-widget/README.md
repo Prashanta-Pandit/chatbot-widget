@@ -9,7 +9,7 @@ A React chatbot widget using **React**, **TailwindCSS**, **Axios**, and **Lucide
 ### Step 1: Install the Widget
 
 ```bash
-npm install react-ai-chatbot-widget
+npm install react-aichatbot-widget
 ```
 
 > `axios` is included with the widget and does not need to be installed separately.
@@ -37,7 +37,7 @@ npm install react react-dom tailwindcss lucide-react
 
 ```jsx
 import React from "react";
-import ChatBotWidget from "react-ai-chatbot-widget";
+import ChatBotWidget from "reactai-chatbot-widget";
 
 function App() {
   return (

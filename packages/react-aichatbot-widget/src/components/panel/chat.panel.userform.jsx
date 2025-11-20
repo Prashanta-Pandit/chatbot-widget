@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace, chatbotHostURL }) => {
+const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace, chatbotHostURL, primaryColor, fontColor, backgroundColor }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -66,7 +66,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
                 setName(e.target.value)
                 setError('')
               }}
-              className="w-full px-3 py-2 border border-neutral-300 rounded-xl bg-neutral-50"
+              className={`w-full px-3 py-2 border border-neutral-300 rounded-xl bg-${backgroundColor}/5`}
               required
             />
           </div>
@@ -81,7 +81,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
                 setEmail(e.target.value)
                 setError('')
               }}
-              className="w-full px-3 py-2 border border-neutral-300 rounded-xl bg-neutral-50"
+              className={`w-full px-3 py-2 border border-neutral-300 rounded-xl bg-${backgroundColor}/5`}
               required
             />
           </div>
@@ -91,9 +91,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
         <button
           type="submit"
           disabled={!name.trim() || !email.trim() || isLoading}
-          className="bg-sky-600 hover:bg-sky-700 disabled:opacity-50 
-                     disabled:cursor-not-allowed text-white px-5 py-3 
-                     rounded-xl font-medium flex items-center justify-center gap-2 mt-20"
+          className={`bg-${primaryColor} hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed text-${fontColor} px-5 py-3 rounded-xl font-medium flex items-center justify-center gap-2 mt-20`}
         >
           {isLoading ? "Submitting..." : (<><Send size={18} /> Submit</>)}
         </button>

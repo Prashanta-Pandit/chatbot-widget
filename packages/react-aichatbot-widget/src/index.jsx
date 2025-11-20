@@ -4,7 +4,16 @@ import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 import { v4 as uuidv4 } from "uuid";
 
-export default function ChatBotWidget({ pineconeNamespace, chatbotHostURL }) {
+const  ChatBotWidget = (
+  { pineconeNamespace, 
+    chatbotHostURL,
+    primaryColor,
+    secondaryColor,
+    position,
+    backgroundColor,
+    fontColor
+  }
+) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [sessionId, setSessionId] = useState('');
@@ -21,9 +30,27 @@ export default function ChatBotWidget({ pineconeNamespace, chatbotHostURL }) {
   return (
     <div className="fixed bottom-7 right-7">
       {isOpen &&
-        <ChatPanel onClose={toggleChat} sessionId={sessionId} pineconeNamespace={pineconeNamespace} chatbotHostURL={chatbotHostURL} /> 
+        <ChatPanel 
+        onClose={toggleChat} 
+        sessionId={sessionId} 
+        pineconeNamespace={pineconeNamespace} 
+        chatbotHostURL={chatbotHostURL} 
+        primaryColor={primaryColor} 
+        secondaryColor={secondaryColor} 
+        position={position} 
+        backgroundColor={backgroundColor} 
+        fontColor={fontColor} 
+        /> 
       }
-      <ChatButton onClick={toggleChat} />
+      <ChatButton 
+        onClick={toggleChat} 
+        primaryColor={primaryColor} 
+        secondaryColor={secondaryColor} 
+        position={position} 
+        fontColor={fontColor} 
+      />
     </div>
   );
 }
+
+export default ChatBotWidget;
