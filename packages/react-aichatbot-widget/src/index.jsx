@@ -6,12 +6,16 @@ import { v4 as uuidv4 } from "uuid";
 
 const ChatBotWidget = ({
   pineconeNamespace,
-  chatbotHostURL,
+  url,
   primaryColor,
   secondaryColor,
   backgroundColor,
   fontColor,
+  placeholderColor,
   position,
+  name,
+  subTitle,
+  welcomeText
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [sessionId, setSessionId] = useState("");
@@ -22,18 +26,19 @@ const ChatBotWidget = ({
 
   const toggleChat = () => setIsOpen(prev => !prev);
 
-  // Pass hex values directly down
-  const theme = { primaryColor, secondaryColor, backgroundColor, fontColor };
+  const theme = { primaryColor, secondaryColor, backgroundColor, fontColor, placeholderColor };
+  const chatBotData = { name, subTitle, welcomeText, url, pineconeNamespace, position, sessionId };
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9999]">
+    <div className="fixed inset-0 pointer-events-auto z-[9999]">
       {isOpen && (
         <ChatPanel
           onClose={toggleChat}
           sessionId={sessionId}
           pineconeNamespace={pineconeNamespace}
-          chatbotHostURL={chatbotHostURL}
+          url={url}
           theme={theme}
+          chatBotData={chatBotData}
         />
       )}
 
@@ -41,7 +46,7 @@ const ChatBotWidget = ({
         onClick={toggleChat}
         isOpen={isOpen}
         theme={theme}
-        position={position}
+        chatBotData={chatBotData}
       />
     </div>
   );

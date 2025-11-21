@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace, chatbotHostURL, theme }) => {
+const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -21,7 +21,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
     const message = `Hi, I am ${name} and my email is ${email}`;
 
     try {
-      const metaData = await handleChat(message, sessionId, pineconeNamespace, chatbotHostURL);
+      const metaData = await handleChat(message, chatBotData.sessionId, chatBotData.pineconeNamespace, chatBotData.url);
       const botText = metaData.response;
 
       // send message back to parent
@@ -41,7 +41,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
   };
 
   return (
-    <div className="p-5 border-t flex-shrink-0"
+    <div className="p-5 flex-shrink-0"
       style={{ background: theme.backgroundColor }}
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -55,7 +55,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, sessionId, pineconeNamespace
         <p className=" text-sm font-medium"
           style = {{ color: `${theme.fontColor}` }}
         >
-          Please enter your details to get started.
+          {chatBotData.welcomeText}
         </p>
 
         <div className="flex flex-col gap-5">

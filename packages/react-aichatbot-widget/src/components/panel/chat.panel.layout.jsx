@@ -5,17 +5,17 @@ import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL, position, theme }) => {
+const ChatPanel = ({ onClose, theme, chatBotData }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
 
-  const posClass = position === "left" ? "left-8" : "right-8";
+  const pos = chatBotData.position === "left" ? "left-8" : "right-8";
 
-  const boxStyle ={
-    boxShadow: `0 20px 25px -5px ${theme.primaryColor}40`,
+  const boxStyle = {
+    boxShadow: "0 20px 25px -5px rgba(0,0,0,0.15)",
     background: theme.backgroundColor,
-  }
+  };
 
   const headerStyle = {
     background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
@@ -39,7 +39,7 @@ const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL, posi
     setMessages((prev) => [...prev, { type: "user", text: userMessage }]);
 
     try {
-      const metaData = await handleChat(userMessage, sessionId, pineconeNamespace, chatbotHostURL);
+      const metaData = await handleChat(userMessage, chatBotData.sessionId, chatBotData.pineconeNamespace, chatBotData.url);
       const botText = metaData.response;
 
       setMessages((prev) => [...prev, { type: "bot", text: botText }]);
@@ -55,12 +55,12 @@ const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL, posi
   };
 
   return (
-    <div className={`fixed bottom-28 shadow-xl ${posClass} z-50 w-96 h-[520px] bg-white/90 backdrop-blur-xl rounded-2xl border border-neutral-100 flex flex-col overflow-hidden`}
+    <div
+      className={`fixed bottom-28 ${pos} z-50 w-96 h-[520px] bg-white/90 backdrop-blur-xl rounded-2xl border border-white flex flex-col overflow-hidden`}
       style={boxStyle}
     >
-
       {/* Header */}
-      <div className="bg-gradient-to-r px-5 py-4 rounded-t-2xl flex items-center justify-between shadow-sm"
+      <div className="bg-gradient-to-r px-5 py-4 rounded-t-2xl flex items-center justify-between shadow-md"
         style={headerStyle}
       >
         <div className="flex items-center gap-3">
@@ -68,12 +68,12 @@ const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL, posi
             <div className={`w-11 h-11 rounded-full flex items-center justify-center`}>
               <MessageCircle size={22} />
             </div>
-            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-white" />
+            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-400 rounded-full border-1 border-white" />
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg">Swiggy</h3>
-            <p className="text-xs opacity-90">Virtual assistance</p>
+            <h3 className="font-semibold text-lg">{chatBotData.name}</h3>
+            <p className="text-xs opacity-90">{chatBotData.subTitle}</p>
           </div>
         </div>
 
@@ -89,18 +89,16 @@ const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL, posi
       {!hasUserInfo && (
         <ChatPanelUserForm 
           handleMessageFromForm={handleMessageFromForm} 
-          sessionId={sessionId} 
-          pineconeNamespace={pineconeNamespace} 
-          chatbotHostURL={chatbotHostURL}
           theme={theme}
+          chatBotData={chatBotData}
         />
       )}
 
       {/* After submit → Show Chat UI */}
       {hasUserInfo && (
         <>
-          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} />
-          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} />
+          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme}/>
+          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme}/>
         </>
       )}
 
@@ -108,8 +106,12 @@ const ChatPanel = ({ onClose, sessionId, pineconeNamespace, chatbotHostURL, posi
       <div className="border-t border-neutral-200 px-5 py-3 text-center"
         style={footerStyle}
       >
-        <p className="text-[11px] text-neutral-500 tracking-wide">
-          powered by <span className="font-semibold text-neutral-600">clone67.com</span>
+        <p className="text-[11px]  tracking-wide"
+         style = {{ color: `${theme.fontColor}` }}  
+        >
+          powered by <span className="font-semibold "
+            style = {{ color: `${theme.fontColor}` }}
+          >clone67.com</span>
         </p>
       </div>
     </div>

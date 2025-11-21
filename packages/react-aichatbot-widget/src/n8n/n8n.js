@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const handleChat = async (input, sessionId, pineconeNamespace, chatbotHostURL) => {
+const handleChat = async (input, sessionId, pineconeNamespace, url) => {
 
   const payload = {
     chatInput: input,
@@ -12,7 +12,7 @@ const handleChat = async (input, sessionId, pineconeNamespace, chatbotHostURL) =
 
   try {
     const result = await axios.post (
-        chatbotHostURL,
+        url,
         payload,
         {
             headers: {

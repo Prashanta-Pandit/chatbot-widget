@@ -45,7 +45,7 @@ function App() {
     {/*add a namespace for chatbot and chatbot url*/}
       <ChatBotWidget 
         pineconeNamespace=''
-        chatbotHostURL='' 
+        url='' 
       />
     </div>
   );
