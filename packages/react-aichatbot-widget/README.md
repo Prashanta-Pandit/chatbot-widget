@@ -37,7 +37,7 @@ npm install react react-dom tailwindcss lucide-react
 
 ```jsx
 import React from "react";
-import ChatBotWidget from "reactai-chatbot-widget";
+import ChatBotWidget from "react-aichatbot-widget";
 
 function App() {
   return (
@@ -45,7 +45,15 @@ function App() {
     {/*add a namespace for chatbot and chatbot url*/}
       <ChatBotWidget 
         pineconeNamespace=''
-        url='' 
+        url=''
+        primaryColor=""       // hex color code
+        secondaryColor=""     // hex color code
+        fontColor=""          // hex color code
+        backgroundColor=""    // hex color code
+        position=""           // left or right
+        name=""               // any name
+        subTitle=""           // any subtitle
+        welcomeText=""        // any welcome text 
       />
     </div>
   );

@@ -26,29 +26,55 @@ const ChatBotWidget = ({
 
   const toggleChat = () => setIsOpen(prev => !prev);
 
-  const theme = { primaryColor, secondaryColor, backgroundColor, fontColor, placeholderColor };
-  const chatBotData = { name, subTitle, welcomeText, url, pineconeNamespace, position, sessionId };
+  const theme = {
+    primaryColor,
+    secondaryColor,
+    backgroundColor,
+    fontColor,
+    placeholderColor
+  };
+
+  const chatBotData = {
+    name,
+    subTitle,
+    welcomeText,
+    url,
+    pineconeNamespace,
+    position,
+    sessionId
+  };
 
   return (
-    <div className="fixed inset-0 pointer-events-auto z-[9999]">
+    <>
       {isOpen && (
-        <ChatPanel
-          onClose={toggleChat}
-          sessionId={sessionId}
-          pineconeNamespace={pineconeNamespace}
-          url={url}
+        <div
+          className={`fixed bottom-24 ${
+            position === "left" ? "left-8" : "right-8"
+          } z-[9999] pointer-events-auto`}
+        >
+          <ChatPanel
+            onClose={toggleChat}
+            sessionId={sessionId}
+            pineconeNamespace={pineconeNamespace}
+            url={url}
+            theme={theme}
+            chatBotData={chatBotData}
+          />
+        </div>
+      )}
+      <div
+        className={`fixed bottom-8 ${
+          position === "left" ? "left-8" : "right-8"
+        } z-[10000] pointer-events-auto`}
+      >
+        <ChatButton
+          onClick={toggleChat}
+          isOpen={isOpen}
           theme={theme}
           chatBotData={chatBotData}
         />
-      )}
-
-      <ChatButton
-        onClick={toggleChat}
-        isOpen={isOpen}
-        theme={theme}
-        chatBotData={chatBotData}
-      />
-    </div>
+      </div>
+    </>
   );
 };
 
