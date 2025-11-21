@@ -7,15 +7,15 @@ import { v4 as uuidv4 } from "uuid";
 const ChatBotWidget = ({
   pineconeNamespace,
   url,
-  primaryColor,
-  secondaryColor,
-  backgroundColor,
-  fontColor,
-  placeholderColor,
-  position,
-  name,
-  subTitle,
-  welcomeText
+  primaryColor = "#3b82f6",
+  secondaryColor = "#8b5cf6",
+  backgroundColor = "#ffffff",
+  fontColor = "#1f2937",
+  placeholderColor = "#9ca3af",
+  position = "right",
+  name = "Assistant",
+  subTitle = "Typically replies instantly",
+  welcomeText = "Hi! How can I help you today?"
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [sessionId, setSessionId] = useState("");
@@ -31,7 +31,8 @@ const ChatBotWidget = ({
     secondaryColor,
     backgroundColor,
     fontColor,
-    placeholderColor
+    placeholderColor,
+    inputBackgroundColor: backgroundColor // fallback if not provided
   };
 
   const chatBotData = {
@@ -44,29 +45,40 @@ const ChatBotWidget = ({
     sessionId
   };
 
+  const isLeft = position === "left";
+  const horizontalPos = "32px"; // equivalent to left-8 / right-8
+
+  // Panel container (above button when open)
+  const panelWrapperStyle = {
+    position: "fixed",
+    bottom: "104px", // 8 + 64 + some margin
+    [isLeft ? "left" : "right"]: horizontalPos,
+    zIndex: 9999,
+    pointerEvents: "auto",
+  };
+
+  // Button container
+  const buttonWrapperStyle = {
+    position: "fixed",
+    bottom: "32px",
+    [isLeft ? "left" : "right"]: horizontalPos,
+    zIndex: 10000,
+    pointerEvents: "auto",
+  };
+
   return (
     <>
       {isOpen && (
-        <div
-          className={`fixed bottom-24 ${
-            position === "left" ? "left-8" : "right-8"
-          } z-[9999] pointer-events-auto`}
-        >
+        <div style={panelWrapperStyle}>
           <ChatPanel
             onClose={toggleChat}
-            sessionId={sessionId}
-            pineconeNamespace={pineconeNamespace}
-            url={url}
             theme={theme}
             chatBotData={chatBotData}
           />
         </div>
       )}
-      <div
-        className={`fixed bottom-8 ${
-          position === "left" ? "left-8" : "right-8"
-        } z-[10000] pointer-events-auto`}
-      >
+
+      <div style={buttonWrapperStyle}>
         <ChatButton
           onClick={toggleChat}
           isOpen={isOpen}

@@ -10,24 +10,112 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
 
-  const pos = chatBotData.position === "left" ? "left-8" : "right-8";
+  const isLeft = chatBotData.position === "left";
 
-  const boxStyle = {
-    boxShadow: "0 20px 25px -5px rgba(0,0,0,0.15)",
-    background: theme.backgroundColor,
+  // Main panel container
+  const panelStyle = {
+    position: "fixed",
+    bottom: "112px", // 28 + 84 (button height)
+    [isLeft ? "left" : "right"]: "32px",
+    zIndex: 50,
+    width: "384px",
+    height: "520px",
+    background: `${theme.backgroundColor}cc`, // 90% opacity via hex
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
+    borderRadius: "16px",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
+    boxShadow: "0 20px 25px -5px rgba(0,0,0,0.15), 0 10px 10px -5px rgba(0,0,0,0.1)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    fontFamily: "system-ui, -apple-system, sans-serif",
   };
 
+  // Header gradient bar
   const headerStyle = {
+    padding: "16px 20px",
     background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
-    color: theme.fontColor
-  }
+    color: theme.fontColor,
+    borderRadius: "16px 16px 0 0",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+  };
 
+  // Avatar container
+  const avatarWrapperStyle = {
+    position: "relative",
+  };
+
+  const avatarCircleStyle = {
+    width: "44px",
+    height: "44px",
+    borderRadius: "50%",
+    background: "rgba(255,255,255,0.2)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
+  const onlineDotStyle = {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: "14px",
+    height: "14px",
+    backgroundColor: "#34d399",
+    borderRadius: "50%",
+    border: "3px solid white",
+  };
+
+  const titleStyle = {
+    fontSize: "18px",
+    fontWeight: "600",
+    margin: 0,
+    lineHeight: "1.2",
+  };
+
+  const subtitleStyle = {
+    fontSize: "12px",
+    opacity: 0.9,
+    margin: 0,
+    lineHeight: "1.3",
+  };
+
+  const closeButtonStyle = {
+    padding: "8px",
+    borderRadius: "50%",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    transition: "background 0.2s",
+  };
+
+  // Footer
   const footerStyle = {
+    padding: "12px 20px",
+    borderTop: "1px solid rgba(255,255,255,0.2)",
     background: theme.backgroundColor,
-    color: theme.fontColor
-  }
+    textAlign: "center",
+  };
 
-  // Called by UserForm once form submits successfully
+  const footerTextStyle = {
+    fontSize: "11px",
+    color: theme.fontColor,
+    letterSpacing: "0.5px",
+  };
+
+  const footerBoldStyle = {
+    fontWeight: "600",
+  };
+
+  // Hover effect for close button
+  const handleCloseHover = (e, enter) => {
+    e.currentTarget.style.background = enter ? "rgba(255,255,255,0.2)" : "transparent";
+  };
+
   const handleMessageFromForm = (msgs) => {
     setMessages(msgs);
     setHasUserInfo(true);
@@ -35,13 +123,16 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
 
   const sendMessage = async (userMessage) => {
     setIsLoading(true);
-
     setMessages((prev) => [...prev, { type: "user", text: userMessage }]);
 
     try {
-      const metaData = await handleChat(userMessage, chatBotData.sessionId, chatBotData.pineconeNamespace, chatBotData.url);
+      const metaData = await handleChat(
+        userMessage,
+        chatBotData.sessionId,
+        chatBotData.pineconeNamespace,
+        chatBotData.url
+      );
       const botText = metaData.response;
-
       setMessages((prev) => [...prev, { type: "bot", text: botText }]);
     } catch (error) {
       console.error("Chat error:", error);
@@ -55,63 +146,52 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
   };
 
   return (
-    <div
-      className={`fixed bottom-28 ${pos} z-50 w-96 h-[520px] bg-white/90 backdrop-blur-xl rounded-2xl border border-white flex flex-col overflow-hidden`}
-      style={boxStyle}
-    >
+    <div style={panelStyle}>
       {/* Header */}
-      <div className="bg-gradient-to-r px-5 py-4 rounded-t-2xl flex items-center justify-between shadow-md"
-        style={headerStyle}
-      >
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className={`w-11 h-11 rounded-full flex items-center justify-center`}>
+      <div style={headerStyle}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={avatarWrapperStyle}>
+            <div style={avatarCircleStyle}>
               <MessageCircle size={22} />
             </div>
-            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-400 rounded-full border-1 border-white" />
+            <span style={onlineDotStyle} />
           </div>
-
           <div>
-            <h3 className="font-semibold text-lg">{chatBotData.name}</h3>
-            <p className="text-xs opacity-90">{chatBotData.subTitle}</p>
+            <h3 style={titleStyle}>{chatBotData.name}</h3>
+            <p style={subtitleStyle}>{chatBotData.subTitle}</p>
           </div>
         </div>
 
         <button
           onClick={onClose}
           aria-label="Close chat"
-          className="p-2 hover:bg-white/20 rounded-full">
+          style={closeButtonStyle}
+          onMouseEnter={(e) => handleCloseHover(e, true)}
+          onMouseLeave={(e) => handleCloseHover(e, false)}
+        >
           <X size={20} />
         </button>
       </div>
 
-      {/* Before submit → Show UserForm */}
-      {!hasUserInfo && (
-        <ChatPanelUserForm 
-          handleMessageFromForm={handleMessageFromForm} 
+      {/* Conditional Content */}
+      {!hasUserInfo ? (
+        <ChatPanelUserForm
+          handleMessageFromForm={handleMessageFromForm}
           theme={theme}
           chatBotData={chatBotData}
         />
-      )}
-
-      {/* After submit → Show Chat UI */}
-      {hasUserInfo && (
+      ) : (
         <>
-          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme}/>
-          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme}/>
+          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
+          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
         </>
       )}
 
       {/* Footer */}
-      <div className="border-t border-neutral-200 px-5 py-3 text-center"
-        style={footerStyle}
-      >
-        <p className="text-[11px]  tracking-wide"
-         style = {{ color: `${theme.fontColor}` }}  
-        >
-          powered by <span className="font-semibold "
-            style = {{ color: `${theme.fontColor}` }}
-          >clone67.com</span>
+      <div style={footerStyle}>
+        <p style={footerTextStyle}>
+          powered by{" "}
+          <span style={footerBoldStyle}>clone67.com</span>
         </p>
       </div>
     </div>
