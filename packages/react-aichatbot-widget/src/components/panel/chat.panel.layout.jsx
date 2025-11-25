@@ -9,6 +9,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
+  const [botResponseTime, setBotResponseTime] = useState(null);
 
   const isLeft = chatBotData.position === "left";
 
@@ -116,6 +117,16 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
     e.currentTarget.style.background = enter ? "rgba(255,255,255,0.2)" : "transparent";
   };
 
+  const formatTime = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("en-AU", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+
   const handleMessageFromForm = (msgs) => {
     setMessages(msgs);
     setHasUserInfo(true);
@@ -133,6 +144,8 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
         chatBotData.url
       );
       const botText = metaData.response;
+      setBotResponseTime(formatTime(metaData.response_timestamp));
+      
       setMessages((prev) => [...prev, { type: "bot", text: botText }]);
     } catch (error) {
       console.error("Chat error:", error);
@@ -182,7 +195,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
         />
       ) : (
         <>
-          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
+          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} botResponseTime={botResponseTime} />
           <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
         </>
       )}

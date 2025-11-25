@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from "react";
-import { Ellipsis } from "lucide-react";
+import { Bot } from "lucide-react";
 
-const ChatPanelMessagesBox = ({ messages, isLoading, theme }) => {
+const ChatPanelMessagesBox = ({ messages , isLoading, theme, botResponseTime }) => {
   const messagesEndRef = useRef(null);
+
+  console.log("Messages in MessageBox:", messages);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,57 +34,88 @@ const ChatPanelMessagesBox = ({ messages, isLoading, theme }) => {
     width: "100%",
   });
 
+  // Message bubble container with timestamp
+  const bubbleContainerStyle = {
+    display: "flex",
+    flexDirection: "column",
+    maxWidth: "80%",
+  };
+
   // Message bubble
   const bubbleStyle = (type) => ({
     padding: "12px 16px",
     borderRadius: "16px",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
     border: "1px solid #e4e4e7",
-    maxWidth: "80%",
     fontSize: "14px",
     lineHeight: "1.5",
     background: type === "user" ? theme.primaryColor : theme.backgroundColor,
     color: theme.fontColor,
-    wordWrap: "break-word",
+    wordWrap: "break-word"
   });
 
-  // Special style for bot typing bubble (rounded-bl-none → rounded bottom-left only)
-  const typingBubbleStyle = {
+ const typingBubbleStyle = {
     ...bubbleStyle("bot"),
-    borderBottomLeftRadius: "4px", // instead of rounded-bl-none
+    animation: 'fadeIn 0.3s ease-in-out, pulse 1.5s ease-in-out infinite',
+    animationDelay: '0s, 0.3s'
   };
 
   return (
     <div style={containerStyle}>
       {messages.map((msg, index) => (
         <div key={index} style={messageWrapperStyle(msg.type)}>
-          <div style={bubbleStyle(msg.type)}>
-            {msg.text}
+          <div style={bubbleContainerStyle}>
+            {/* Timestamp and bot icon for a ai response */}
+            {msg.type === "bot" && botResponseTime && (
+              <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-start", marginLeft: "4px", marginBottom: "2px" }}>
+                <Bot size={14} color={theme.fontColor} />
+                <span
+                  style={{
+                    fontSize: "10px",
+                    opacity: 0.55,
+                    color: theme.fontColor,
+                  }}
+                >
+                  {botResponseTime}
+                </span>
+              </div>
+            )}
+            
+            {/* Icon for user response */}
+            {
+              msg.type === "user" && (
+              <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-end", marginRight: "4px", marginBottom: "2px" }}>
+                <span
+                  style={{
+                    fontSize: "10px",
+                    opacity: 0.55,
+                    color: theme.fontColor,
+                  }}
+                >
+                  You
+                </span>
+              </div>
+            )
+            }
+
+            {/* Message bubble */}
+            <div style={bubbleStyle(msg.type)}>
+              {msg.text}
+            </div>
           </div>
+
         </div>
       ))}
 
       {isLoading && (
         <div style={messageWrapperStyle("bot")}>
           <div style={typingBubbleStyle}>
-            <Ellipsis size={24} style={{ animation: "pulse 1.5s ease-in-out infinite" }} />
+            <Bot size={24} />
           </div>
         </div>
       )}
 
       <div ref={messagesEndRef} />
-
-      {/* Pulse animation for the ellipsis */}
-      <style jsx>{`
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 0.4;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 };
