@@ -32,11 +32,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
       );
 
       //console.log("metaData from user form:", data);
-      const botText = data.response
-
-      if (!botText) {
-        botText = "Sorry, I couldn't process your request. Please try again.";
-      }
+      const botText = data.response;
 
       handleMessageFromForm([
          { type: "user", text: message },
