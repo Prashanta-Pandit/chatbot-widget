@@ -143,7 +143,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
         chatBotData.pineconeNamespace,
         chatBotData.url
       );
-      const botText = metaData.response;
+      const botText = metaData.output;
       setBotResponseTime(formatTime(metaData.response_timestamp));
       
       setMessages((prev) => [...prev, { type: "bot", text: botText }]);

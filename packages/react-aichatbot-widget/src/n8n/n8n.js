@@ -20,7 +20,9 @@ const handleChat = async (input, sessionId, pineconeNamespace, url) => {
             }
         }
     );
-    const response = result.data.output;
+    
+    const response = result.data.response;
+    console.log('API response:', result);
     return response;
     
   } catch (error) {

@@ -28,11 +28,13 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
         chatBotData.pineconeNamespace,
         chatBotData.url
       );
-      const botText = metaData.response;
+
+      console.log("metaData from user form:", metaData);
+      const botText = metaData.output;
 
       handleMessageFromForm([
-        { type: "user", text: message },
-        { type: "bot", text: botText },
+         { type: "user", text: message },
+         { type: "bot", text: botText },
       ]);
     } catch (error) {
       console.log("error sending user details", error);

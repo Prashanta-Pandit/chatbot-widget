@@ -12,7 +12,7 @@ export default function App() {
       </div>
 
       <ChatBotWidget
-        pineconeNamespace="cloney-d6cd8ff6-c513-4fc7-8fdf-7eec37453722"
+        pineconeNamespace="cloney-1e018f87-e5bc-480e-95c3-739809a0c47d"
         url="https://n8n.clone67.com/webhook/860a03cc-0933-4645-98a4-56a8e6d9754e/chat"
         primaryColor="#edd11a"      
         secondaryColor="#edd11a"    
