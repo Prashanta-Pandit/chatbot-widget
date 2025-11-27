@@ -22,15 +22,21 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
     const message = `Hi, I am ${name} and my email is ${email}`;
 
     try {
-      const metaData = await handleChat(
+      const data = await handleChat(
         message,
         chatBotData.sessionId,
         chatBotData.pineconeNamespace,
-        chatBotData.url
+        chatBotData.url,
+        name,
+        email
       );
 
-      console.log("metaData from user form:", metaData);
-      const botText = metaData.output;
+      //console.log("metaData from user form:", data);
+      const botText = data.response
+
+      if (!botText) {
+        botText = "Sorry, I couldn't process your request. Please try again.";
+      }
 
       handleMessageFromForm([
          { type: "user", text: message },

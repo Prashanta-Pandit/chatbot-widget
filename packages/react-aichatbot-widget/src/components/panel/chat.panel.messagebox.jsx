@@ -4,8 +4,6 @@ import { Bot } from "lucide-react";
 const ChatPanelMessagesBox = ({ messages , isLoading, theme, botResponseTime }) => {
   const messagesEndRef = useRef(null);
 
-  console.log("Messages in MessageBox:", messages);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };

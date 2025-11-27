@@ -137,14 +137,14 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
     setMessages((prev) => [...prev, { type: "user", text: userMessage }]);
 
     try {
-      const metaData = await handleChat(
+      const data = await handleChat(
         userMessage,
         chatBotData.sessionId,
         chatBotData.pineconeNamespace,
         chatBotData.url
       );
-      const botText = metaData.output;
-      setBotResponseTime(formatTime(metaData.response_timestamp));
+      const botText = data.response;
+      setBotResponseTime(formatTime(data.response_timestamp));
       
       setMessages((prev) => [...prev, { type: "bot", text: botText }]);
     } catch (error) {

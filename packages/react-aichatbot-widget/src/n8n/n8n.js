@@ -1,12 +1,14 @@
 import axios from 'axios';
 
-const handleChat = async (input, sessionId, pineconeNamespace, url) => {
+const handleChat = async (input, sessionId, pineconeNamespace, url, name, email) => {
 
   const payload = {
     chatInput: input,
     sessionId,
     metadata: {
       pinecone_namespace: pineconeNamespace,
+      name,
+      email,
     }
   };
 
@@ -21,8 +23,7 @@ const handleChat = async (input, sessionId, pineconeNamespace, url) => {
         }
     );
     
-    const response = result.data.response;
-    console.log('API response:', result);
+    const response = result.data;
     return response;
     
   } catch (error) {
