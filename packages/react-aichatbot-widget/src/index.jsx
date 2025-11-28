@@ -24,7 +24,9 @@ const ChatBotWidget = ({
     setSessionId(uuidv4());
   }, []);
 
-  const toggleChat = () => setIsOpen(prev => !prev);
+  const onClose = () => setIsOpen(prev => !prev);
+
+  const onMinimise = () => setIsOpen(prev => !prev);
 
   const theme = {
     primaryColor,
@@ -71,7 +73,7 @@ const ChatBotWidget = ({
       {isOpen && (
         <div style={panelWrapperStyle}>
           <ChatPanel
-            onClose={toggleChat}
+            onMinimise={onMinimise}
             theme={theme}
             chatBotData={chatBotData}
           />
@@ -80,7 +82,7 @@ const ChatBotWidget = ({
 
       <div style={buttonWrapperStyle}>
         <ChatButton
-          onClick={toggleChat}
+          onClick={onClose}
           isOpen={isOpen}
           theme={theme}
           chatBotData={chatBotData}

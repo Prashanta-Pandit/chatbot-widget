@@ -1,27 +1,26 @@
 import React, { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, Minimize2, Maximize2, Minus } from "lucide-react";
 import ChatPanelForm from "./chat.panel.form";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanel = ({ onClose, theme, chatBotData }) => {
+const ChatPanel = ({ onMinimise, theme, chatBotData }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
-  const [botResponseTime, setBotResponseTime] = useState(null);
+  const [isExpand, setIsExpand] = useState(false);
 
   const isLeft = chatBotData.position === "left";
 
-  // Main panel container
   const panelStyle = {
     position: "fixed",
-    bottom: "112px", // 28 + 84 (button height)
+    bottom: "112px",
     [isLeft ? "left" : "right"]: "32px",
     zIndex: 50,
-    width: "384px",
-    height: "520px",
-    background: `${theme.backgroundColor}cc`, // 90% opacity via hex
+    width: isExpand ? "584px" : "384px",
+    height: isExpand ? "720px" : "520px",
+    background: `${theme.backgroundColor}cc`,
     backdropFilter: "blur(16px)",
     WebkitBackdropFilter: "blur(16px)",
     borderRadius: "16px",
@@ -85,7 +84,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
     lineHeight: "1.3",
   };
 
-  const closeButtonStyle = {
+  const topButtonStyle = {
     padding: "8px",
     borderRadius: "50%",
     background: "transparent",
@@ -113,17 +112,8 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
   };
 
   // Hover effect for close button
-  const handleCloseHover = (e, enter) => {
+  const handleTopButtonHover = (e, enter) => {
     e.currentTarget.style.background = enter ? "rgba(255,255,255,0.2)" : "transparent";
-  };
-
-  const formatTime = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString("en-AU", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
 
@@ -143,10 +133,8 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
         chatBotData.pineconeNamespace,
         chatBotData.url
       );
-      const botText = data.response;
-      setBotResponseTime(formatTime(data.response_timestamp));
       
-      setMessages((prev) => [...prev, { type: "bot", text: botText }]);
+      setMessages((prev) => [...prev, { type: "bot", text: data.response, response_timestamp: data.response_timestamp, suggested_prompts: data.suggested_prompt }]);
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [
@@ -175,15 +163,29 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
           </div>
         </div>
 
-        <button
-          onClick={onClose}
-          aria-label="Close chat"
-          style={closeButtonStyle}
-          onMouseEnter={(e) => handleCloseHover(e, true)}
-          onMouseLeave={(e) => handleCloseHover(e, false)}
-        >
-          <X size={20} />
-        </button>
+        <div style={{ display: "flex", alignItems: "left" }}>
+          <button
+            onClick={() => setIsExpand(prev => !prev)}
+            aria-label="expand chat"
+            style={topButtonStyle}
+            onMouseEnter={(e) => handleTopButtonHover(e, true)}
+            onMouseLeave={(e) => handleTopButtonHover(e, false)}
+          >
+            {
+              isExpand ? <Minimize2 size={20} /> : <Maximize2 size={20} />
+            }
+          </button>
+
+          <button
+            onClick={onMinimise}
+            aria-label="minimise chat"
+            style={topButtonStyle}
+            onMouseEnter={(e) => handleTopButtonHover(e, true)}
+            onMouseLeave={(e) => handleTopButtonHover(e, false)}
+          >
+            <Minus size={20} />
+          </button>
+        </div>
       </div>
 
       {/* Conditional Content */}
@@ -195,8 +197,8 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
         />
       ) : (
         <>
-          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} botResponseTime={botResponseTime} />
-          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
+          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
+          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} messages={messages} />
         </>
       )}
 

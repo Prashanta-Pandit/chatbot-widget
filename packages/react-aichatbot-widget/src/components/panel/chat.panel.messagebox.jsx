@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Bot } from "lucide-react";
 
-const ChatPanelMessagesBox = ({ messages , isLoading, theme, botResponseTime }) => {
+const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -64,7 +64,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme, botResponseTime }) 
         <div key={index} style={messageWrapperStyle(msg.type)}>
           <div style={bubbleContainerStyle}>
             {/* Timestamp and bot icon for a ai response */}
-            {msg.type === "bot" && botResponseTime && (
+            {msg.type === "bot"  && (
               <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-start", marginLeft: "4px", marginBottom: "2px" }}>
                 <Bot size={14} color={theme.fontColor} />
                 <span
@@ -74,7 +74,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme, botResponseTime }) 
                     color: theme.fontColor,
                   }}
                 >
-                  {botResponseTime}
+                  {msg.response_timestamp}
                 </span>
               </div>
             )}
@@ -101,14 +101,19 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme, botResponseTime }) 
               {msg.text}
             </div>
           </div>
-
         </div>
       ))}
 
       {isLoading && (
         <div style={messageWrapperStyle("bot")}>
-          <div style={typingBubbleStyle}>
+          <div style={{
+            typingBubbleStyle, 
+            display: "flex", 
+            alignItems: "center", 
+            gap: "8px" 
+          }}>
             <Bot size={24} />
+            <span>Typing...</span>
           </div>
         </div>
       )}

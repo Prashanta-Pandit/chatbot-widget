@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Send } from "lucide-react";
 
 const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
@@ -21,6 +21,7 @@ const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
   const containerStyle = {
     padding: "16px",
     borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+    borderColor: theme.fontColor,
     background: theme.backgroundColor,
     flexShrink: 0,
   };
@@ -68,13 +69,14 @@ const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
 
   return (
     <div style={containerStyle}>
+
       <div style={wrapperStyle}>
         <input
           type="text"
           placeholder="Type a message..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyPress} // onKeyPress is deprecated → use onKeyDown
+          onKeyDown={handleKeyPress}
           disabled={isLoading}
           style={inputStyle}
           onFocus={(e) => {
