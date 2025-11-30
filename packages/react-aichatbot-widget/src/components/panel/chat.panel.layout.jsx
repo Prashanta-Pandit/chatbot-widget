@@ -18,7 +18,7 @@ const ChatPanel = ({ onMinimise, theme, chatBotData }) => {
     bottom: "112px",
     [isLeft ? "left" : "right"]: "32px",
     zIndex: 50,
-    width: isExpand ? "584px" : "384px",
+    width: isExpand ? "684px" : "384px",
     height: isExpand ? "620px" : "520px",
     background: `${theme.backgroundColor}cc`,
     backdropFilter: "blur(16px)",

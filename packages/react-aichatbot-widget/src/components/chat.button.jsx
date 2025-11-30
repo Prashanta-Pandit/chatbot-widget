@@ -39,7 +39,7 @@ const ChatButton = ({ onClick, isOpen, theme, chatBotData }) => {
     right: "-4px",
     width: "16px",
     height: "16px",
-    backgroundColor: "#34d399", // emerald-400
+    backgroundColor: "#34d399",
     borderRadius: "50%",
     border: "4px solid white",
     animation: "pulse 2s infinite",

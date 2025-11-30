@@ -48,7 +48,7 @@ const ChatBotWidget = ({
   };
 
   const isLeft = position === "left";
-  const horizontalPos = "32px"; // equivalent to left-8 / right-8
+  const horizontalPos = "32px";
 
   // Panel container (above button when open)
   const panelWrapperStyle = {
