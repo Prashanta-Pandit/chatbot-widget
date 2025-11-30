@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Send } from "lucide-react";
+import { Send, LoaderCircle } from "lucide-react";
 import { handleChat } from "../../n8n/n8n";
 
 const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,8 +19,6 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
       setIsLoading(false);
       return;
     }
-
-    const message = `Hi, I am ${name} and my email is ${email}`;
 
     try {
       const data = await handleChat(
@@ -47,6 +46,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
 
     setName("");
     setEmail("");
+    setMessage("");
   };
 
   // Inline styles
@@ -109,7 +109,6 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
     alignItems: "center",
     justifyContent: "center",
     gap: "8px",
-    marginTop: "80px",
     transition: "all 0.2s ease",
   };
 
@@ -123,74 +122,94 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
     fontWeight: "500",
   };
 
+  
+
   return (
     <div style={containerStyle}>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        {error && (
-          <div style={errorStyle} role="alert">
-            {error}
-          </div>
-        )}
-
-        <p style={welcomeTextStyle}>{chatBotData.welcomeText}</p>
-
-        <div style={inputGroupStyle}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            <label style={labelStyle}>Full Name</label>
-            <input
-              type="text"
-              placeholder="Enter your full name"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setError("");
-              }}
-              style={inputStyle}
-              required
-            />
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            <label style={labelStyle}>Email Address</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError("");
-              }}
-              style={inputStyle}
-              required
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          disabled={!name.trim() || !email.trim() || isLoading}
-          style={buttonStyle}
-          onMouseEnter={(e) => {
-            if (name.trim() && email.trim() && !isLoading) {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.15)";
-            }
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "none";
-          }}
-        >
-          {isLoading ? (
-            "Submitting..."
-          ) : (
-            <>
-              <Send size={18} />
-              Submit
-            </>
+        <form onSubmit={handleSubmit} style={formStyle}>
+          {error && (
+            <div style={errorStyle} role="alert">
+              {error}
+            </div>
           )}
-        </button>
-      </form>
+
+          <p style={welcomeTextStyle}>{chatBotData.welcomeText}</p>
+
+          <div style={inputGroupStyle}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <label style={labelStyle}>Full Name</label>
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setError("");
+                }}
+                style={inputStyle}
+                required
+              />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <label style={labelStyle}>Email Address</label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                }}
+                style={inputStyle}
+                required
+              />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <label style={labelStyle}>Message</label>
+              <textarea
+                placeholder="Enter your message"
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  setError("");
+                }}
+                style={{
+                  ...inputStyle,
+                  minHeight: "60px", 
+                  resize: "vertical", 
+                }}
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!name.trim() || !email.trim() || isLoading}
+            style={buttonStyle}
+            onMouseEnter={(e) => {
+              if (name.trim() && email.trim() && !isLoading) {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.15)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            {isLoading ? (
+              "Submitting..."
+            ) : (
+              <>
+                <Send size={18} />
+                Submit
+              </>
+            )}
+          </button>
+        </form>
     </div>
   );
 };
