@@ -8,6 +8,17 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-AU', { 
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
@@ -74,7 +85,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
                     color: theme.fontColor,
                   }}
                 >
-                  {msg.response_timestamp}
+                  {formatTimestamp(msg.response_timestamp)}
                 </span>
               </div>
             )}

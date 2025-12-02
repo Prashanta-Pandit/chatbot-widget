@@ -30,12 +30,9 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
         email
       );
 
-      //console.log("metaData from user form:", data);
-      const botText = data.response;
-
       handleMessageFromForm([
          { type: "user", text: message },
-         { type: "bot", text: botText },
+         { type: "bot", text: data.response, response_timestamp: data.response_timestamp },
       ]);
     } catch (error) {
       console.log("error sending user details", error);
@@ -121,8 +118,6 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
     textAlign: "center",
     fontWeight: "500",
   };
-
-  
 
   return (
     <div style={containerStyle}>
