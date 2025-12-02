@@ -1,7 +1,7 @@
 // components/chat.button.jsx
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, Minus } from "lucide-react";
 
-const ChatButton = ({ onClick, isOpen, theme, chatBotData }) => {
+const ChatButton = ({ onMinimise, isOpen, theme, chatBotData }) => {
   const isLeft = chatBotData.position === "left";
   const posLeft = isLeft ? "32px" : "auto";
   const posRight = isLeft ? "auto" : "32px";
@@ -47,14 +47,14 @@ const ChatButton = ({ onClick, isOpen, theme, chatBotData }) => {
 
   return (
     <button
-      onClick={onClick}
+      onClick={onMinimise}
       style={buttonStyle}
       onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverFocusStyle)}
       onMouseLeave={(e) => Object.keys(hoverFocusStyle).forEach(key => e.currentTarget.style[key] = buttonStyle[key] || "")}
       onFocus={(e) => Object.assign(e.currentTarget.style, hoverFocusStyle)}
       onBlur={(e) => Object.keys(hoverFocusStyle).forEach(key => e.currentTarget.style[key] = buttonStyle[key] || "")}
     >
-      {isOpen ? <X size={30} strokeWidth={2.5} /> : <MessageCircle size={30} strokeWidth={2.5} />}
+      {isOpen ? <Minus size={30} strokeWidth={2.5} /> : <MessageCircle size={30} strokeWidth={2.5} />}
 
       {!isOpen && <span style={badgeStyle} />}
       

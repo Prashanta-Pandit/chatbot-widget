@@ -1,6 +1,6 @@
 # React AI Chatbot Widget
 
-A React chatbot widget using **React**, **TailwindCSS**, **Axios**, and **Lucide Icons**.
+A React chatbot widget using **React**, **Axios**, and **Lucide Icons**.
 
 ---
 

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { MessageCircle, Minimize2, Maximize2, Minus } from "lucide-react";
+import { MessageCircle, Minimize2, Maximize2, X } from "lucide-react";
 import ChatPanelForm from "./chat.panel.form";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleChat } from "../../n8n/n8n";
 
-const ChatPanel = ({ onMinimise, theme, chatBotData }) => {
+const ChatPanel = ({ onClose, theme, chatBotData }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
@@ -177,13 +177,13 @@ const ChatPanel = ({ onMinimise, theme, chatBotData }) => {
           </button>
 
           <button
-            onClick={onMinimise}
-            aria-label="minimise chat"
+            onClick={onClose}
+            aria-label="close chat"
             style={topButtonStyle}
             onMouseEnter={(e) => handleTopButtonHover(e, true)}
             onMouseLeave={(e) => handleTopButtonHover(e, false)}
           >
-            <Minus size={20} />
+            <X size={20} />
           </button>
         </div>
       </div>

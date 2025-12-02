@@ -1,10 +1,6 @@
 {
   "name": "react-aichatbot-widget",
-<<<<<<< HEAD
-  "version": "1.4.3",
-=======
   "version": "1.4.4",
->>>>>>> main
   "description": "A React ChatBot Widget",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
