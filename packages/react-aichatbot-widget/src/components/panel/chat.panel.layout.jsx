@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MessageCircle, Minimize2, Maximize2, X } from "lucide-react";
 import ChatPanelForm from "./chat.panel.form";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";

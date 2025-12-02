@@ -54,7 +54,7 @@ const ChatButton = ({ onMinimise, isOpen, theme, chatBotData }) => {
       onFocus={(e) => Object.assign(e.currentTarget.style, hoverFocusStyle)}
       onBlur={(e) => Object.keys(hoverFocusStyle).forEach(key => e.currentTarget.style[key] = buttonStyle[key] || "")}
     >
-      {isOpen ? <Minus size={30} strokeWidth={2.5} /> : <MessageCircle size={30} strokeWidth={2.5} />}
+      {isOpen ? <Minus size={20} strokeWidth={2.5} /> : <MessageCircle size={20} strokeWidth={2.5} />}
 
       {!isOpen && <span style={badgeStyle} />}
       

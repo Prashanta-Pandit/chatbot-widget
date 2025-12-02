@@ -20,15 +20,14 @@ const ChatBotWidget = ({
   const [isOpen, setIsOpen] = useState(false);
   const [sessionId, setSessionId] = useState("");
 
+
   useEffect(() => {
     setSessionId(uuidv4());
   }, []);
 
+  const onClose = () => setIsOpen(prev => !prev);
+
   const onMinimise = () => setIsOpen(prev => !prev);
-
-  const onClose = () => {
-
-  };
 
   const theme = {
     primaryColor,
