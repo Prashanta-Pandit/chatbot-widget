@@ -29,7 +29,6 @@ npm install react react-dom tailwindcss lucide-react
 | `tailwindcss`  | ^4.1.17  |   |         |
 | `lucide-react` | ^0.554.0 |   |         |
 | `axios`        | ^1.6.0   |   |         |
-| `uuid`         | ^13.0.0  |   |         |
 
 ---
 
@@ -66,6 +65,6 @@ export default App;
 
 ## Notes
 
-* `axios` & `uuid` is bundled; no extra installation required.
+* `axios` is bundled; no extra installation required.
 * TailwindCSS is required if you want to customize styles.
 * React and ReactDOM must match the versions listed above.
