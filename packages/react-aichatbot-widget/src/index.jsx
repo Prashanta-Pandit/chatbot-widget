@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
-import { v4 as uuidv4 } from "uuid";
 
 const ChatBotWidget = ({
   pineconeNamespace,
