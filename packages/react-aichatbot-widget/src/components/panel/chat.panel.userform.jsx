@@ -23,7 +23,6 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
     try {
       const data = await handleChat(
         message,
-        chatBotData.sessionId,
         chatBotData.pineconeNamespace,
         chatBotData.url,
         name,
@@ -32,7 +31,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
 
       handleMessageFromForm([
          { type: "user", text: message },
-         { type: "bot", text: data.response, response_timestamp: data.response_timestamp },
+         { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp },
       ]);
     } catch (error) {
       console.log("error sending user details", error);

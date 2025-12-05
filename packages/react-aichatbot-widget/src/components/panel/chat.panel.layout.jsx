@@ -129,12 +129,11 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
     try {
       const data = await handleChat(
         userMessage,
-        chatBotData.sessionId,
         chatBotData.pineconeNamespace,
         chatBotData.url
       );
       
-      setMessages((prev) => [...prev, { type: "bot", text: data.response, response_timestamp: data.response_timestamp, suggested_prompts: data.suggested_prompt }]);
+      setMessages((prev) => [...prev, { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, suggested_prompts: data.n8n.suggested_prompt }]);
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [

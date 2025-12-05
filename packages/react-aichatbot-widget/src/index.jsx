@@ -18,12 +18,6 @@ const ChatBotWidget = ({
   welcomeText = "Hi! How can I help you today?"
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [sessionId, setSessionId] = useState("");
-
-
-  useEffect(() => {
-    setSessionId(uuidv4());
-  }, []);
 
   const onClose = () => setIsOpen(prev => !prev);
 
@@ -45,7 +39,6 @@ const ChatBotWidget = ({
     url,
     pineconeNamespace,
     position,
-    sessionId
   };
 
   const isLeft = position === "left";

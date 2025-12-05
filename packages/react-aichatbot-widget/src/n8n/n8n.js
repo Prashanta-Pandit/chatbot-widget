@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const handleChat = async (input, sessionId, pineconeNamespace, url, name, email) => {
+const handleChat = async (input, pineconeNamespace, url, name, email) => {
 
   const payload = {
     chatInput: input,
-    sessionId,
     metadata: {
       pinecone_namespace: pineconeNamespace,
       name,
