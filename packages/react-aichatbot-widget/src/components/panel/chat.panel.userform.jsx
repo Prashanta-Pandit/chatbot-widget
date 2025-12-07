@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Send, LoaderCircle } from "lucide-react";
-import { handleChat } from "../../n8n/n8n";
+import { Send } from "lucide-react";
+import { initiateChatSession } from "../../n8n/n8n";
 
-const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
+const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatSessionId }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -21,18 +21,23 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
     }
 
     try {
-      const data = await handleChat(
+      const data = await initiateChatSession(
         userInput,
         chatBotData.pineconeNamespace,
-        chatBotData.url,
+        chatBotData.initiateChatUrl,
         name,
-        email
+        email,
       );
+
+      console.log("response from n8n", data);
 
       handleMessageFromForm([
          { type: "user", text: userInput },
          { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, sessionId: data.n8n.sessionId },
       ]);
+
+      setChatSessionId(data.n8n.sessionId);
+
     } catch (error) {
       console.log("error sending user details", error);
       setError("Failed to submit. Please try again.");

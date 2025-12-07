@@ -5,7 +5,8 @@ import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 
 const ChatBotWidget = ({
   pineconeNamespace,
-  url,
+  onGoingChatUrl,
+  initiateChatUrl,
   primaryColor = "#3b82f6",
   secondaryColor = "#8b5cf6",
   backgroundColor = "#ffffff",
@@ -31,11 +32,13 @@ const ChatBotWidget = ({
     inputBackgroundColor: backgroundColor // fallback if not provided
   };
 
+  // bundle chatBot related data
   const chatBotData = {
     name,
     subTitle,
     welcomeText,
-    url,
+    onGoingChatUrl,
+    initiateChatUrl,
     pineconeNamespace,
     position,
   };

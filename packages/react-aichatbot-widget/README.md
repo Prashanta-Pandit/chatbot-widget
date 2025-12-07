@@ -45,6 +45,7 @@ function App() {
       <ChatBotWidget 
         pineconeNamespace=''
         url=''
+        chatMessageUrl=''
         primaryColor=""       // hex color code
         secondaryColor=""     // hex color code
         fontColor=""          // hex color code
