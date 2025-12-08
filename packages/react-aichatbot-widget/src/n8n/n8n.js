@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const initiateChatSession = async (input, pineconeNamespace, initiateChatUrl, name, email) => {
 
-  console.log('Creating chat session with input url:', initiateChatUrl);
 
   const payload = {
     chatInput: input,

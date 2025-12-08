@@ -29,8 +29,6 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
         email,
       );
 
-      console.log("response from n8n", data);
-
       handleMessageFromForm([
          { type: "user", text: userInput },
          { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, sessionId: data.n8n.sessionId },
