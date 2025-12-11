@@ -1,7 +1,16 @@
 // components/chat.button.jsx
 import { MessageCircle, Minus } from "lucide-react";
+import { Theme, ChatBotData } from "./types/types";
 
-const ChatButton = ({ onMinimise, isOpen, theme, chatBotData }) => {
+
+interface ChatButtonProps {
+  onMinimise: ;
+  isOpen: ;
+  theme: Theme;
+  chatBotData: ChatBotData;
+}
+
+const ChatButton = ({ onMinimise, isOpen, theme, chatBotData } : ChatButtonProps) => {
   const isLeft = chatBotData.position === "left";
   const posLeft = isLeft ? "32px" : "auto";
   const posRight = isLeft ? "auto" : "32px";

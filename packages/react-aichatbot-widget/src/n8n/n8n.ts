@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const initiateChatSession = async (input, pineconeNamespace, initiateChatUrl, name, email) => {
+const initiateChatSession = async (input : string, pineconeNamespace : string, initiateChatUrl : string, name : string, email : string) => {
 
 
   const payload = {
@@ -32,7 +32,7 @@ const initiateChatSession = async (input, pineconeNamespace, initiateChatUrl, na
   }
 };
 
-const handleEachChat = async (input, pineconeNamespace, onGoingChatURL, sessionId) => {
+const handleEachChat = async (input : string, pineconeNamespace : string, onGoingChatURL : string, sessionId : string) => {
 
   const payload = {
     chatInput: input,

@@ -1,7 +1,9 @@
 // ChatBotWidget.jsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
+
+import { ChatBotWidgetProps, Theme, ChatBotData  } from './components/types/types'
 
 const ChatBotWidget = ({
   pineconeNamespace,
@@ -16,24 +18,24 @@ const ChatBotWidget = ({
   name = "Assistant",
   subTitle = "Typically replies instantly",
   welcomeText = "Hi! How can I help you today?"
-}) => {
+} : ChatBotWidgetProps ) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onClose = () => setIsOpen(prev => !prev);
 
   const onMinimise = () => setIsOpen(prev => !prev);
 
-  const theme = {
+  const theme : Theme = {
     primaryColor,
     secondaryColor,
     backgroundColor,
     fontColor,
     placeholderColor,
-    inputBackgroundColor: backgroundColor // fallback if not provided
+    inputBackgroundColor: backgroundColor
   };
 
   // bundle chatBot related data
-  const chatBotData = {
+  const chatBotData : ChatBotData = {
     name,
     subTitle,
     welcomeText,
@@ -47,7 +49,7 @@ const ChatBotWidget = ({
   const horizontalPos = "32px";
 
   // Panel container (above button when open)
-  const panelWrapperStyle = {
+  const panelWrapperStyle : React.CSSProperties = {
     position: "fixed",
     bottom: "104px", // 8 + 64 + some margin
     [isLeft ? "left" : "right"]: horizontalPos,
@@ -56,7 +58,7 @@ const ChatBotWidget = ({
   };
 
   // Button container
-  const buttonWrapperStyle = {
+  const buttonWrapperStyle : React.CSSProperties = {
     position: "fixed",
     bottom: "32px",
     [isLeft ? "left" : "right"]: horizontalPos,
