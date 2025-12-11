@@ -5,20 +5,28 @@ import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleEachChat } from "../../n8n/n8n";
 
-const ChatPanel = ({ onClose, theme, chatBotData }) => {
-  const [messages, setMessages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasUserInfo, setHasUserInfo] = useState(false);
-  const [isExpand, setIsExpand] = useState(false);
-  const [sessionId, setSessionId] = useState(null);
+import { ChatBotData, Theme, Message  } from "../types/types";
+
+interface ChatPanelProps {
+  onClose: () => void ;
+  theme: Theme;
+  chatBotData: ChatBotData;
+}
+
+const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [hasUserInfo, setHasUserInfo] = useState<boolean>(false);
+  const [isExpand, setIsExpand] = useState<boolean>(false);
+  const [sessionId, setSessionId] = useState<string>('');
 
   const isLeft = chatBotData.position === "left";
 
-  const handleChatSessionIdFromUserForm = (id) => {
+  const handleChatSessionIdFromUserForm = (id : string) => {
     setSessionId(id); 
   }
 
-  const panelStyle = {
+  const panelStyle: React.CSSProperties = {
     position: "fixed",
     bottom: "112px",
     [isLeft ? "left" : "right"]: "32px",
@@ -38,7 +46,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
   };
 
   // Header gradient bar
-  const headerStyle = {
+  const headerStyle: React.CSSProperties = {
     padding: "16px 20px",
     background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
     color: theme.fontColor,
@@ -50,11 +58,11 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
   };
 
   // Avatar container
-  const avatarWrapperStyle = {
+  const avatarWrapperStyle: React.CSSProperties = {
     position: "relative",
   };
 
-  const avatarCircleStyle = {
+  const avatarCircleStyle : React.CSSProperties = {
     width: "44px",
     height: "44px",
     borderRadius: "50%",
@@ -64,7 +72,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
     justifyContent: "center",
   };
 
-  const onlineDotStyle = {
+  const onlineDotStyle : React.CSSProperties = {
     position: "absolute",
     bottom: 0,
     right: 0,
@@ -75,21 +83,21 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
     border: "3px solid white",
   };
 
-  const titleStyle = {
+  const titleStyle : React.CSSProperties = {
     fontSize: "18px",
     fontWeight: "600",
     margin: 0,
     lineHeight: "1.2",
   };
 
-  const subtitleStyle = {
+  const subtitleStyle  : React.CSSProperties= {
     fontSize: "12px",
     opacity: 0.9,
     margin: 0,
     lineHeight: "1.3",
   };
 
-  const topButtonStyle = {
+  const topButtonStyle : React.CSSProperties= {
     padding: "8px",
     borderRadius: "50%",
     background: "transparent",
@@ -99,37 +107,37 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
   };
 
   // Footer
-  const footerStyle = {
+  const footerStyle: React.CSSProperties = {
     padding: "12px 20px",
     borderTop: "1px solid rgba(255,255,255,0.2)",
     background: theme.backgroundColor,
     textAlign: "center",
   };
 
-  const footerTextStyle = {
+  const footerTextStyle: React.CSSProperties = {
     fontSize: "11px",
     color: theme.fontColor,
     letterSpacing: "0.5px",
   };
 
-  const footerBoldStyle = {
+  const footerBoldStyle: React.CSSProperties = {
     fontWeight: "600",
   };
 
   // Hover effect for close button
-  const handleTopButtonHover = (e, enter) => {
+  const handleTopButtonHover = (e: React.MouseEvent<HTMLButtonElement>, enter : boolean) => {
     e.currentTarget.style.background = enter ? "rgba(255,255,255,0.2)" : "transparent";
   };
 
 
-  const handleMessageFromForm = (msgs) => {
+  const handleMessageFromForm = (msgs : any) => {
     setMessages(msgs);
     setHasUserInfo(true);
   };
 
-  const sendMessage = async (userMessage) => {
+  const sendMessage = async (userMessage : string) => {
     setIsLoading(true);
-    setMessages((prev) => [...prev, { type: "user", text: userMessage }]);
+    setMessages((prev: Message[]) => [...prev, { type: "user", text: userMessage }]);
 
     try {
       const data = await handleEachChat (
@@ -139,7 +147,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
         sessionId,
       );
       
-      setMessages((prev) => [...prev, { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, suggested_prompts: data.n8n.suggested_prompt }]);
+      setMessages((prev : Message[]) => [...prev, { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, suggested_prompts: data.n8n.suggested_prompt }]);
 
     } catch (error) {
       console.error("Chat error:", error);
@@ -205,7 +213,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
       ) : (
         <>
           <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
-          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} messages={messages} />
+          <ChatPanelForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
         </>
       )}
 

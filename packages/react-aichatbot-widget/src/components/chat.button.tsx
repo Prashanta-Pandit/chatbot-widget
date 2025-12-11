@@ -2,10 +2,9 @@
 import { MessageCircle, Minus } from "lucide-react";
 import { Theme, ChatBotData } from "./types/types";
 
-
 interface ChatButtonProps {
-  onMinimise: ;
-  isOpen: ;
+  onMinimise: () => void ;
+  isOpen: boolean ;
   theme: Theme;
   chatBotData: ChatBotData;
 }
@@ -15,7 +14,7 @@ const ChatButton = ({ onMinimise, isOpen, theme, chatBotData } : ChatButtonProps
   const posLeft = isLeft ? "32px" : "auto";
   const posRight = isLeft ? "auto" : "32px";
 
-  const buttonStyle = {
+  const buttonStyle : React.CSSProperties = {
     position: "fixed",
     bottom: "32px",
     left: posLeft,
@@ -36,13 +35,8 @@ const ChatButton = ({ onMinimise, isOpen, theme, chatBotData } : ChatButtonProps
     outline: "none",
   };
 
-  const hoverFocusStyle = {
-    transform: "scale(1.10)",
-    boxShadow: "0 25px 35px -5px rgba(0,0,0,0.2)",
-  };
-
   // Badge (pulse dot when closed)
-  const badgeStyle = {
+  const badgeStyle : React.CSSProperties = {
     position: "absolute",
     top: "-4px",
     right: "-4px",
@@ -58,28 +52,10 @@ const ChatButton = ({ onMinimise, isOpen, theme, chatBotData } : ChatButtonProps
     <button
       onClick={onMinimise}
       style={buttonStyle}
-      onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverFocusStyle)}
-      onMouseLeave={(e) => Object.keys(hoverFocusStyle).forEach(key => e.currentTarget.style[key] = buttonStyle[key] || "")}
-      onFocus={(e) => Object.assign(e.currentTarget.style, hoverFocusStyle)}
-      onBlur={(e) => Object.keys(hoverFocusStyle).forEach(key => e.currentTarget.style[key] = buttonStyle[key] || "")}
     >
       {isOpen ? <Minus size={20} strokeWidth={2.5} /> : <MessageCircle size={20} strokeWidth={2.5} />}
 
       {!isOpen && <span style={badgeStyle} />}
-      
-      <style jsx>{`
-        @keyframes pulse {
-          0% {
-            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
-          }
-          70% {
-            box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
-          }
-          100% {
-            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
-          }
-        }
-      `}</style>
     </button>
   );
 };

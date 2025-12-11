@@ -3,7 +3,22 @@ import { useState } from "react";
 import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 
-import { ChatBotWidgetProps, Theme, ChatBotData  } from './components/types/types'
+import { Theme, ChatBotData  } from './components/types/types'
+
+export interface ChatBotWidgetProps {
+    pineconeNamespace : string;
+    onGoingChatUrl : string;
+    initiateChatUrl : string;
+    primaryColor ?: string;
+    secondaryColor ?: string;
+    backgroundColor : string;
+    fontColor ?: string;
+    placeholderColor ?: string;
+    position ?: string;
+    name ?: string;
+    subTitle ?: string;
+    welcomeText ?: string;
+}
 
 const ChatBotWidget = ({
   pineconeNamespace,
@@ -19,7 +34,7 @@ const ChatBotWidget = ({
   subTitle = "Typically replies instantly",
   welcomeText = "Hi! How can I help you today?"
 } : ChatBotWidgetProps ) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onClose = () => setIsOpen(prev => !prev);
 

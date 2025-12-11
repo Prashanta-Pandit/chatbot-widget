@@ -1,20 +1,5 @@
 // centralise the types of TS
 
-export interface ChatBotWidgetProps {
-    pineconeNamespace : string;
-    onGoingChatUrl : string;
-    initiateChatUrl : string;
-    primaryColor ?: string;
-    secondaryColor ?: string;
-    backgroundColor : string;
-    fontColor ?: string;
-    placeholderColor ?: string;
-    position ?: string;
-    name ?: string;
-    subTitle ?: string;
-    welcomeText ?: string;
-}
-
 export interface Theme {
     primaryColor : string;
     secondaryColor : string;
@@ -32,4 +17,11 @@ export interface ChatBotData {
     initiateChatUrl : string;
     pineconeNamespace : string;
     position : string;
+}
+
+export interface Message {
+    type: 'bot' | 'user';
+    text: string;
+    response_timestamp?: string ;
+    suggested_prompts?: string[] ;
 }
