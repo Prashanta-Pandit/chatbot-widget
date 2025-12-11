@@ -82,7 +82,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
         <div key={index} style={messageWrapperStyle(msg.type)}>
           <div style={bubbleContainerStyle}>
             {/* Timestamp and bot icon for a ai response */}
-            {msg.type === "bot"  && (
+            {msg.type === "bot"  && msg.response_timestamp && (
               <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-start", marginLeft: "4px", marginBottom: "2px" }}>
                 <Bot size={14} color={theme.fontColor} />
                 <span

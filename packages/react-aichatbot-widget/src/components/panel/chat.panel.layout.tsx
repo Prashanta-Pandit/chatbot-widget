@@ -151,7 +151,7 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
 
     } catch (error) {
       console.error("Chat error:", error);
-      setMessages((prev) => [
+      setMessages((prev:Message[]) => [
         ...prev,
         { type: "bot", text: "Sorry, something went wrong." },
       ]);
