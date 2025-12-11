@@ -22,6 +22,6 @@ export interface ChatBotData {
 export interface Message {
     type: 'bot' | 'user';
     text: string;
-    response_timestamp?: string ;
-    suggested_prompts?: string[] ;
+    response_timestamp: string ;
+    suggested_prompts: string[] ;
 }

@@ -1,14 +1,21 @@
 import React, { useRef, useEffect } from "react";
 import { Bot } from "lucide-react";
+import { Theme, Message } from '../types/types';
 
-const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
-  const messagesEndRef = useRef(null);
+interface ChatPanelMessageBoxProps {
+  theme: Theme;
+  messages: Message[] ;
+  isLoading: boolean;
+}
+
+const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessageBoxProps) => {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  function formatTimestamp(timestamp) {
+  function formatTimestamp(timestamp : string) {
     const date = new Date(timestamp);
     return date.toLocaleString('en-AU', { 
       day: 'numeric',
@@ -24,7 +31,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
   }, [messages, isLoading]);
 
   // Base container
-  const containerStyle = {
+  const containerStyle  : React.CSSProperties = {
     flex: 1,
     overflowY: "auto",
     padding: "20px",
@@ -37,21 +44,21 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
   };
 
   // Message wrapper (aligns user vs bot)
-  const messageWrapperStyle = (type) => ({
+  const messageWrapperStyle = (type : string) : React.CSSProperties => ({
     display: "flex",
     justifyContent: type === "user" ? "flex-end" : "flex-start",
     width: "100%",
   });
 
   // Message bubble container with timestamp
-  const bubbleContainerStyle = {
+  const bubbleContainerStyle  : React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     maxWidth: "80%",
   };
 
   // Message bubble
-  const bubbleStyle = (type) => ({
+  const bubbleStyle  = (type : string) : React.CSSProperties => ({
     padding: "12px 16px",
     borderRadius: "16px",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
@@ -63,7 +70,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
     wordWrap: "break-word"
   });
 
- const typingBubbleStyle = {
+ const typingBubbleStyle: React.CSSProperties = {
     ...bubbleStyle("bot"),
     animation: 'fadeIn 0.3s ease-in-out, pulse 1.5s ease-in-out infinite',
     animationDelay: '0s, 0.3s'
@@ -71,7 +78,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
 
   return (
     <div style={containerStyle}>
-      {messages.map((msg, index) => (
+      {messages.map((msg:Message, index: number) => (
         <div key={index} style={messageWrapperStyle(msg.type)}>
           <div style={bubbleContainerStyle}>
             {/* Timestamp and bot icon for a ai response */}
@@ -118,7 +125,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme }) => {
       {isLoading && (
         <div style={messageWrapperStyle("bot")}>
           <div style={{
-            typingBubbleStyle, 
+            ...typingBubbleStyle, 
             display: "flex", 
             alignItems: "center", 
             gap: "8px" 

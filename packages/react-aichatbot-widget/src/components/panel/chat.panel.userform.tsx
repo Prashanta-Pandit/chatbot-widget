@@ -2,14 +2,25 @@ import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { initiateChatSession } from "../../n8n/n8n";
 
-const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatSessionId }) => {
+import { Theme, ChatBotData } from '../types/types';
+
+interface ChatPanelUserFormProps {
+  handleMessageFromForm: ( msgs: any) => void;
+  theme: Theme;
+  chatBotData: ChatBotData;
+  setChatSessionId: (id: string) => void ;
+}
+
+const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatSessionId } : ChatPanelUserFormProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userInput, setUserInput] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+
+
+  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -49,20 +60,20 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
   };
 
   // Inline styles
-  const containerStyle = {
+  const containerStyle  : React.CSSProperties = {
     padding: "20px",
     flexShrink: 0,
     background: theme.backgroundColor,
     fontFamily: "system-ui, -apple-system, sans-serif",
   };
 
-  const formStyle = {
+  const formStyle  : React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     gap: "24px",
   };
 
-  const welcomeTextStyle = {
+  const welcomeTextStyle  : React.CSSProperties = {
     fontSize: "14px",
     fontWeight: "500",
     color: theme.fontColor,
@@ -70,19 +81,19 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
     lineHeight: "1.4",
   };
 
-  const inputGroupStyle = {
+  const inputGroupStyle  : React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     gap: "20px",
   };
 
-  const labelStyle = {
+  const labelStyle  : React.CSSProperties = {
     fontSize: "14px",
     color: theme.fontColor,
     fontWeight: "500",
   };
 
-  const inputStyle = {
+  const inputStyle : React.CSSProperties = {
     width: "100%",
     padding: "12px 16px",
     background: theme.backgroundColor,
@@ -94,7 +105,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
     boxSizing: "border-box",
   };
 
-  const buttonStyle = {
+  const buttonStyle : React.CSSProperties = {
     padding: "12px 20px",
     borderRadius: "12px",
     fontWeight: "600",
@@ -111,7 +122,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
     transition: "all 0.2s ease",
   };
 
-  const errorStyle = {
+  const errorStyle : React.CSSProperties = {
     backgroundColor: "#fee2e2",
     color: "#713f12",
     padding: "8px 12px",

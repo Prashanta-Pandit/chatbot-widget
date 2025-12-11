@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { Send } from "lucide-react";
 
-const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
+import { Theme } from '../types/types';
+
+interface UserInputFormProps {
+  onSendMessage : (userMessage : string) => void;
+  isLoading: boolean;
+  theme: Theme;
+}
+
+const UserInputForm = ({ onSendMessage, isLoading, theme } : UserInputFormProps) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = () => {
@@ -10,7 +18,7 @@ const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
     setInputValue("");
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e : React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
@@ -18,7 +26,7 @@ const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
   };
 
   // Container (bottom input bar)
-  const containerStyle = {
+  const containerStyle : React.CSSProperties = {
     padding: "16px",
     borderTop: "1px solid rgba(255, 255, 255, 0.2)",
     borderColor: theme.fontColor,
@@ -26,14 +34,14 @@ const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
     flexShrink: 0,
   };
 
-  const wrapperStyle = {
+  const wrapperStyle : React.CSSProperties = {
     display: "flex",
     gap: "12px",
     alignItems: "center",
   };
 
   // Input field
-  const inputStyle = {
+  const inputStyle : React.CSSProperties = {
     flex: 1,
     padding: "12px 16px",
     background: theme.inputBackgroundColor || theme.backgroundColor,
@@ -49,7 +57,7 @@ const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
   };
 
   // Send button
-  const buttonStyle = {
+  const buttonStyle : React.CSSProperties = {
     padding: "12px 20px",
     borderRadius: "12px",
     background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
@@ -112,4 +120,4 @@ const ChatPanelForm = ({ onSendMessage, isLoading, theme }) => {
   );
 };
 
-export default ChatPanelForm;
+export default UserInputForm;
