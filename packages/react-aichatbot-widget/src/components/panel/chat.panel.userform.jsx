@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Send, LoaderCircle } from "lucide-react";
-import { handleChat } from "../../n8n/n8n";
+import { Send } from "lucide-react";
+import { initiateChatSession } from "../../n8n/n8n";
 
-const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
+const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatSessionId }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [userInput, setUserInput] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,19 +21,21 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
     }
 
     try {
-      const data = await handleChat(
-        message,
-        chatBotData.sessionId,
+      const data = await initiateChatSession(
+        userInput,
         chatBotData.pineconeNamespace,
-        chatBotData.url,
+        chatBotData.initiateChatUrl,
         name,
-        email
+        email,
       );
 
       handleMessageFromForm([
-         { type: "user", text: message },
-         { type: "bot", text: data.response, response_timestamp: data.response_timestamp },
+         { type: "user", text: userInput },
+         { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, sessionId: data.n8n.sessionId },
       ]);
+
+      setChatSessionId(data.n8n.sessionId);
+
     } catch (error) {
       console.log("error sending user details", error);
       setError("Failed to submit. Please try again.");
@@ -43,7 +45,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
 
     setName("");
     setEmail("");
-    setMessage("");
+    setUserInput("");
   };
 
   // Inline styles
@@ -165,9 +167,9 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData }) => {
               <label style={labelStyle}>Message</label>
               <textarea
                 placeholder="Enter your message"
-                value={message}
+                value={userInput}
                 onChange={(e) => {
-                  setMessage(e.target.value);
+                  setUserInput(e.target.value);
                   setError("");
                 }}
                 style={{

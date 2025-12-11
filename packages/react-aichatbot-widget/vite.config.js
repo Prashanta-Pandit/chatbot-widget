@@ -12,7 +12,7 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: ["react", "react-dom", "uuid"],
+      external: ["react", "react-dom"],
     },
   },
 });

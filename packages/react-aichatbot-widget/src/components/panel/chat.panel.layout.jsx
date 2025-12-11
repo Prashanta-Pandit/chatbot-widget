@@ -3,15 +3,20 @@ import { MessageCircle, Minimize2, Maximize2, X } from "lucide-react";
 import ChatPanelForm from "./chat.panel.form";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
-import { handleChat } from "../../n8n/n8n";
+import { handleEachChat } from "../../n8n/n8n";
 
 const ChatPanel = ({ onClose, theme, chatBotData }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInfo, setHasUserInfo] = useState(false);
   const [isExpand, setIsExpand] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
 
   const isLeft = chatBotData.position === "left";
+
+  const handleChatSessionIdFromUserForm = (id) => {
+    setSessionId(id); 
+  }
 
   const panelStyle = {
     position: "fixed",
@@ -127,14 +132,15 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
     setMessages((prev) => [...prev, { type: "user", text: userMessage }]);
 
     try {
-      const data = await handleChat(
+      const data = await handleEachChat (
         userMessage,
-        chatBotData.sessionId,
         chatBotData.pineconeNamespace,
-        chatBotData.url
+        chatBotData.onGoingChatUrl,
+        sessionId,
       );
       
-      setMessages((prev) => [...prev, { type: "bot", text: data.response, response_timestamp: data.response_timestamp, suggested_prompts: data.suggested_prompt }]);
+      setMessages((prev) => [...prev, { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, suggested_prompts: data.n8n.suggested_prompt }]);
+
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [
@@ -189,11 +195,12 @@ const ChatPanel = ({ onClose, theme, chatBotData }) => {
       </div>
 
       {/* Conditional Content */}
-      {!hasUserInfo ? (
+      {!sessionId ? (
         <ChatPanelUserForm
           handleMessageFromForm={handleMessageFromForm}
           theme={theme}
           chatBotData={chatBotData}
+          setChatSessionId={handleChatSessionIdFromUserForm}
         />
       ) : (
         <>

@@ -2,11 +2,11 @@
 import { useState, useEffect } from "react";
 import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
-import { v4 as uuidv4 } from "uuid";
 
 const ChatBotWidget = ({
   pineconeNamespace,
-  url,
+  onGoingChatUrl,
+  initiateChatUrl,
   primaryColor = "#3b82f6",
   secondaryColor = "#8b5cf6",
   backgroundColor = "#ffffff",
@@ -18,12 +18,6 @@ const ChatBotWidget = ({
   welcomeText = "Hi! How can I help you today?"
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [sessionId, setSessionId] = useState("");
-
-
-  useEffect(() => {
-    setSessionId(uuidv4());
-  }, []);
 
   const onClose = () => setIsOpen(prev => !prev);
 
@@ -38,14 +32,15 @@ const ChatBotWidget = ({
     inputBackgroundColor: backgroundColor // fallback if not provided
   };
 
+  // bundle chatBot related data
   const chatBotData = {
     name,
     subTitle,
     welcomeText,
-    url,
+    onGoingChatUrl,
+    initiateChatUrl,
     pineconeNamespace,
     position,
-    sessionId
   };
 
   const isLeft = position === "left";
