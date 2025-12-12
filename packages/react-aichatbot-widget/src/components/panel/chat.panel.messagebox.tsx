@@ -82,7 +82,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
         <div key={index} style={messageWrapperStyle(msg.sender_type)}>
           <div style={bubbleContainerStyle}>
             {/* Timestamp and bot icon for a ai response */}
-            {msg.sender_type === "bot"  && msg.response_timestamp && (
+            {msg.sender_type === "bot"  && msg.created_at && (
               <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-start", marginLeft: "4px", marginBottom: "2px" }}>
                 <Bot size={14} color={theme.fontColor} />
                 <span
@@ -92,7 +92,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
                     color: theme.fontColor,
                   }}
                 >
-                  {formatTimestamp(msg.response_timestamp)}
+                  {formatTimestamp(msg.created_at)}
                 </span>
               </div>
             )}
@@ -116,7 +116,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
 
             {/* Message bubble */}
             <div style={bubbleStyle(msg.sender_type)}>
-              {msg.text}
+              {msg.message}
             </div>
           </div>
         </div>

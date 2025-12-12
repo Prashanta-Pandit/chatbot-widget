@@ -5,12 +5,12 @@ import { initiateChatSession } from "../../n8n/n8n";
 import { Theme, ChatBotData } from '../types/types';
 
 interface ChatPanelUserFormProps {
-  handleMessageFromForm: ( msgs: any) => void;
   theme: Theme;
   chatBotData: ChatBotData;
+  trackFormSubmission: (formData : boolean) => void;
 }
 
-const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData } : ChatPanelUserFormProps) => {
+const ChatPanelUserForm = ({ theme, chatBotData, trackFormSubmission } : ChatPanelUserFormProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -36,14 +36,10 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData } : ChatP
         name,
         email,
       );
-
-      handleMessageFromForm([
-         { sender_type: "user", text: userInput },
-         { sender_type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, sessionId: data.n8n.sessionId },
-      ]);
       
-      // store the sessionID ins a localStrorage.
-      localStorage.setItem('clone67ChatSessionId', data.n8n.sessionId);
+      // store the sessionID in a localStrorage.
+      localStorage.setItem('clone67ChatSessionId', data.n8n.session_id);
+      trackFormSubmission(true);
 
     } catch (error) {
       console.log("error sending user details", error);

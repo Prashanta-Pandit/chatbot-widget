@@ -4,7 +4,6 @@ import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 
 import { Theme, ChatBotData  } from './components/types/types';
-import { ChatContextProvider } from "./components/contextProvider/contextProvider.js";
 
 export interface ChatBotWidgetProps {
     pineconeNamespace : string;
@@ -93,7 +92,6 @@ const ChatBotWidget = ({
 
   return (
     <>
-    <ChatContextProvider sessionId={sessionId} fetchChatHistoryUrl={chatBotData.fetchChatHistoryUrl}>
       {isOpen && (
         <div style={panelWrapperStyle}>
           <ChatPanel
@@ -112,7 +110,6 @@ const ChatBotWidget = ({
           chatBotData={chatBotData}
         />
       </div>
-    </ChatContextProvider>
     </>
   );
 };

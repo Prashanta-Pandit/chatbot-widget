@@ -21,8 +21,11 @@ export interface ChatBotData {
 }
 
 export interface Message {
+    attachments?: string;
+    created_at?: string;
+    id?: number;
+    message: string;
     sender_type: 'bot' | 'user';
-    text: string;
-    response_timestamp?: string ; // making optional
-    suggested_prompts?: string[] ; // making optional
+    session_id?: string;
+    suggested_prompts?: string[] ;
 }
