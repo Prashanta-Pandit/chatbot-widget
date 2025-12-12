@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MessageCircle, Minimize2, Maximize2, X } from "lucide-react";
-import UserInputForm from "./chat.panel.form";
+import UserInputForm from "./chat.panel.userinputform";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleEachChat } from "../../n8n/n8n";

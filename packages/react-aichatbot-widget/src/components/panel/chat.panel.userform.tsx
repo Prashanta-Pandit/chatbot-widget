@@ -18,8 +18,6 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-
-
   const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -186,6 +184,7 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
                 style={{
                   ...inputStyle,
                   minHeight: "60px", 
+                  maxHeight: "80px",
                   resize: "vertical", 
                 }}
                 required
