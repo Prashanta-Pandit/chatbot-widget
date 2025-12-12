@@ -1,24 +1,41 @@
-import { ReactNode, createContext, useState } from 'react';
+import { ReactNode, createContext, useState, useEffect } from 'react';
+import { handleFetchChatHistory } from '../../n8n/n8n';
 
 interface ChatContextProps {
-    messages: string[];
+    chatMessages: string[];
 }
 
 const ChatContext = createContext<ChatContextProps | null >(null);
 
 interface ChatContextProviderProps {
     children: ReactNode;
+    fetchChatHistoryUrl: string;
+    sessionId: string;
 }
 
-const ChatContextProvider = ( { children } : ChatContextProviderProps ) => {
+const ChatContextProvider = ( { children, fetchChatHistoryUrl, sessionId } : ChatContextProviderProps ) => {
 
-    const [messages, setMessages] = useState<string[]>([]);
+    const fetchChats = async () => {
+        try{
+            const result: any = await handleFetchChatHistory(sessionId, fetchChatHistoryUrl );
+            const messages = result?.data?.n8n?.messages;
+            setChatMessages(messages);
+        }
+        catch(error){
+            console.error('Error fetching with chat API:', error);
+        }
+    }
+
+    useEffect(()=> {
+        fetchChats();
+    }, [])
+
+    const [chatMessages, setChatMessages] = useState<string[]>([]);
 
     return (
-        <ChatContext.Provider value={ { messages }}>
+        <ChatContext.Provider value={ { chatMessages }}>
             {children}
         </ChatContext.Provider>
-
     )
 }
 

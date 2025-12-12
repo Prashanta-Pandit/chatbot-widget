@@ -62,4 +62,27 @@ const handleEachChat = async (input : string, pineconeNamespace : string, onGoin
   }
 };
 
-export { initiateChatSession, handleEachChat };
+const handleFetchChatHistory = async ( sessionId: string, fetchChatHistoryUrl: string ) => {
+
+  const payload = {
+    sessionId,
+  }
+
+  try{
+      const result = await axios.post(
+      fetchChatHistoryUrl,
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    console.log('fetch chat history:', result);
+  } catch (error) {
+    console.error('Error fetching with chat API:', error);
+    throw error;
+  }
+}
+
+export { initiateChatSession, handleEachChat, handleFetchChatHistory };

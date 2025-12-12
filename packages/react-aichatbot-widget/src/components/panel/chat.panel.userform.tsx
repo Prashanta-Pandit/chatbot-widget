@@ -44,6 +44,9 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
       ]);
 
       setChatSessionId(data.n8n.sessionId);
+      
+      // store the sessionID ins a localStrorage.
+      localStorage.setItem('clone67ChatSessionId', data.n8n.sessionId);
 
     } catch (error) {
       console.log("error sending user details", error);

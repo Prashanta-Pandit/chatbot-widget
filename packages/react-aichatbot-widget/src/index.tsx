@@ -1,14 +1,16 @@
 // ChatBotWidget.jsx
-import { useState } from "react";
+import { useState, useContext } from "react";
 import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 
-import { Theme, ChatBotData  } from './components/types/types'
+import { Theme, ChatBotData  } from './components/types/types';
+import { ChatContextProvider } from "./components/contextProvider/contextProvider.js";
 
 export interface ChatBotWidgetProps {
     pineconeNamespace : string;
     onGoingChatUrl : string;
     initiateChatUrl : string;
+    fetchChatHistoryUrl: string;
     primaryColor ?: string;
     secondaryColor ?: string;
     backgroundColor : string;
@@ -24,6 +26,7 @@ const ChatBotWidget = ({
   pineconeNamespace,
   onGoingChatUrl,
   initiateChatUrl,
+  fetchChatHistoryUrl,
   primaryColor = "#3b82f6",
   secondaryColor = "#8b5cf6",
   backgroundColor = "#ffffff",
@@ -40,6 +43,10 @@ const ChatBotWidget = ({
 
   const onMinimise = () => setIsOpen(prev => !prev);
 
+  // Get sessionId from localStorage (set by the  user form on first submission)
+  const sessionId : string  = localStorage.getItem('clone67ChatSessionId') ?? String(null);
+  console.log('session ID', sessionId);
+
   const theme : Theme = {
     primaryColor,
     secondaryColor,
@@ -55,6 +62,7 @@ const ChatBotWidget = ({
     subTitle,
     welcomeText,
     onGoingChatUrl,
+    fetchChatHistoryUrl,
     initiateChatUrl,
     pineconeNamespace,
     position,
@@ -66,7 +74,7 @@ const ChatBotWidget = ({
   // Panel container (above button when open)
   const panelWrapperStyle : React.CSSProperties = {
     position: "fixed",
-    bottom: "104px", // 8 + 64 + some margin
+    bottom: "104px",
     [isLeft ? "left" : "right"]: horizontalPos,
     zIndex: 9999,
     pointerEvents: "auto",
@@ -83,6 +91,7 @@ const ChatBotWidget = ({
 
   return (
     <>
+    <ChatContextProvider sessionId={sessionId} fetchChatHistoryUrl={chatBotData.fetchChatHistoryUrl}>
       {isOpen && (
         <div style={panelWrapperStyle}>
           <ChatPanel
@@ -101,6 +110,7 @@ const ChatBotWidget = ({
           chatBotData={chatBotData}
         />
       </div>
+    </ChatContextProvider>
     </>
   );
 };
