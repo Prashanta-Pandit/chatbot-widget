@@ -78,7 +78,7 @@ const handleFetchChatHistory = async ( sessionId: string, fetchChatHistoryUrl: s
         }
       }
     );
-    console.log('fetch chat history:', result);
+    return result;
   } catch (error) {
     console.error('Error fetching with chat API:', error);
     throw error;

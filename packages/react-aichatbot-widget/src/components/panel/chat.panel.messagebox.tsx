@@ -44,9 +44,9 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
   };
 
   // Message wrapper (aligns user vs bot)
-  const messageWrapperStyle = (type : string) : React.CSSProperties => ({
+  const messageWrapperStyle = (sender_type : string) : React.CSSProperties => ({
     display: "flex",
-    justifyContent: type === "user" ? "flex-end" : "flex-start",
+    justifyContent: sender_type === "user" ? "flex-end" : "flex-start",
     width: "100%",
   });
 
@@ -58,14 +58,14 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
   };
 
   // Message bubble
-  const bubbleStyle  = (type : string) : React.CSSProperties => ({
+  const bubbleStyle  = (sender_type : string) : React.CSSProperties => ({
     padding: "12px 16px",
     borderRadius: "16px",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
     border: "1px solid #e4e4e7",
     fontSize: "14px",
     lineHeight: "1.5",
-    background: type === "user" ? theme.primaryColor : theme.backgroundColor,
+    background: sender_type === "user" ? theme.primaryColor : theme.backgroundColor,
     color: theme.fontColor,
     wordWrap: "break-word"
   });
@@ -79,10 +79,10 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
   return (
     <div style={containerStyle}>
       {messages.map((msg:Message, index: number) => (
-        <div key={index} style={messageWrapperStyle(msg.type)}>
+        <div key={index} style={messageWrapperStyle(msg.sender_type)}>
           <div style={bubbleContainerStyle}>
             {/* Timestamp and bot icon for a ai response */}
-            {msg.type === "bot"  && msg.response_timestamp && (
+            {msg.sender_type === "bot"  && msg.response_timestamp && (
               <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-start", marginLeft: "4px", marginBottom: "2px" }}>
                 <Bot size={14} color={theme.fontColor} />
                 <span
@@ -99,7 +99,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
             
             {/* Icon for user response */}
             {
-              msg.type === "user" && (
+              msg.sender_type === "user" && (
               <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: "flex-end", marginRight: "4px", marginBottom: "2px" }}>
                 <span
                   style={{
@@ -115,7 +115,7 @@ const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessage
             }
 
             {/* Message bubble */}
-            <div style={bubbleStyle(msg.type)}>
+            <div style={bubbleStyle(msg.sender_type)}>
               {msg.text}
             </div>
           </div>

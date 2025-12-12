@@ -8,10 +8,9 @@ interface ChatPanelUserFormProps {
   handleMessageFromForm: ( msgs: any) => void;
   theme: Theme;
   chatBotData: ChatBotData;
-  setChatSessionId: (id: string) => void ;
 }
 
-const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatSessionId } : ChatPanelUserFormProps) => {
+const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData } : ChatPanelUserFormProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -39,11 +38,9 @@ const ChatPanelUserForm = ({ handleMessageFromForm, theme, chatBotData, setChatS
       );
 
       handleMessageFromForm([
-         { type: "user", text: userInput },
-         { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, sessionId: data.n8n.sessionId },
+         { sender_type: "user", text: userInput },
+         { sender_type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, sessionId: data.n8n.sessionId },
       ]);
-
-      setChatSessionId(data.n8n.sessionId);
       
       // store the sessionID ins a localStrorage.
       localStorage.setItem('clone67ChatSessionId', data.n8n.sessionId);

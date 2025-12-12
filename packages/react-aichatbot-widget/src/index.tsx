@@ -39,13 +39,15 @@ const ChatBotWidget = ({
 } : ChatBotWidgetProps ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const onClose = () => setIsOpen(prev => !prev);
+  const onClose = () => {
+    setIsOpen(prev => !prev);
+    localStorage.removeItem('clone67ChatSessionId'); // remove the session id. 
+  }
 
   const onMinimise = () => setIsOpen(prev => !prev);
 
   // Get sessionId from localStorage (set by the  user form on first submission)
   const sessionId : string  = localStorage.getItem('clone67ChatSessionId') ?? String(null);
-  console.log('session ID', sessionId);
 
   const theme : Theme = {
     primaryColor,

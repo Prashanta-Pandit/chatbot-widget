@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { MessageCircle, Minimize2, Maximize2, X } from "lucide-react";
 import UserInputForm from "./chat.panel.userinputform";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
@@ -19,13 +19,21 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasUserInfo, setHasUserInfo] = useState<boolean>(false);
   const [isExpand, setIsExpand] = useState<boolean>(false);
-  const [sessionId, setSessionId] = useState<string>('');
 
   const isLeft = chatBotData.position === "left";
+  const sessionId : any = localStorage.getItem('clone67ChatSessionId');
 
-  const handleChatSessionIdFromUserForm = (id : string) => {
-    setSessionId(id); 
-  }
+  const chatContext = useContext(ChatContext);
+  const chatMessages = chatContext?.chatMessages;
+
+  console.log()
+
+  // Avoid setting state during render — update messages when context changes
+  useEffect(() => {
+    if (chatMessages && Array.isArray(chatMessages)) {
+      setMessages(chatMessages);
+    }
+  }, [chatMessages]);
 
   const panelStyle: React.CSSProperties = {
     position: "fixed",
@@ -138,7 +146,7 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
 
   const sendMessage = async (userMessage : string) => {
     setIsLoading(true);
-    setMessages((prev: Message[]) => [...prev, { type: "user", text: userMessage }]);
+    setMessages((prev: Message[]) => [...prev, { sender_type: "user", text: userMessage }]);
 
     try {
       const data = await handleEachChat (
@@ -148,13 +156,13 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
         sessionId,
       );
       
-      setMessages((prev : Message[]) => [...prev, { type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, suggested_prompts: data.n8n.suggested_prompt }]);
+      setMessages((prev : Message[]) => [...prev, { sender_type: "bot", text: data.n8n.response, response_timestamp: data.n8n.response_timestamp, suggested_prompts: data.n8n.suggested_prompt }]);
 
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev:Message[]) => [
         ...prev,
-        { type: "bot", text: "Sorry, something went wrong." },
+        { sender_type: "bot", text: "Sorry, something went wrong." },
       ]);
     } finally {
       setIsLoading(false);
@@ -204,12 +212,11 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
       </div>
 
       {/* Conditional Content */}
-      {!sessionId ? (
+      { !sessionId ? (
         <ChatPanelUserForm
           handleMessageFromForm={handleMessageFromForm}
           theme={theme}
           chatBotData={chatBotData}
-          setChatSessionId={handleChatSessionIdFromUserForm}
         />
       ) : (
         <>

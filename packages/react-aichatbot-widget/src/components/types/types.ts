@@ -21,7 +21,7 @@ export interface ChatBotData {
 }
 
 export interface Message {
-    type: 'bot' | 'user';
+    sender_type: 'bot' | 'user';
     text: string;
     response_timestamp?: string ; // making optional
     suggested_prompts?: string[] ; // making optional
