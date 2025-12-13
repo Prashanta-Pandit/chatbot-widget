@@ -9,6 +9,7 @@ interface ChatPanelMessageBoxProps {
 }
 
 const ChatPanelMessagesBox = ({ messages , isLoading, theme } : ChatPanelMessageBoxProps) => {
+  console.log('messages', messages);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {

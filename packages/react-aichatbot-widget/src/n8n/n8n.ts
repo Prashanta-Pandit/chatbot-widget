@@ -78,8 +78,15 @@ const handleFetchChatHistory = async ( sessionId: string, fetchChatHistoryUrl: s
         }
       }
     );
-    console.log('result in n8n', result);
-    return result;
+
+    const messageFound = result.data.n8n.message_found;
+
+    if (!messageFound) {
+      return null;
+    }
+
+    return result.data.n8n.chats;
+
   } catch (error) {
     console.error('Error fetching with chat API:', error);
     throw error;

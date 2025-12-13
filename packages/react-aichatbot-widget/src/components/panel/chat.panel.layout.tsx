@@ -1,48 +1,94 @@
-import React, { useState, useContext, useEffect } from "react";
-import { MessageCircle, Minimize2, Maximize2, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { MessageCircle, Minimize2, Maximize2, X, Loader2 } from "lucide-react";
 import UserInputForm from "./chat.panel.userinputform";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
 import { handleEachChat, handleFetchChatHistory } from "../../n8n/n8n";
 
-import { ChatBotData, Theme, Message  } from "../types/types";
+import { ChatBotData, Theme, Message } from "../types/types";
 
 interface ChatPanelProps {
-  onClose: () => void ;
+  onClose: () => void;
   theme: Theme;
   chatBotData: ChatBotData;
 }
 
-const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
+const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isExpand, setIsExpand] = useState<boolean>(false);
-  const [ hasFormData, setHasFormData ] = useState<boolean>(false);
+  const [hasFormData, setHasFormData] = useState<boolean>(false);
 
   const isLeft = chatBotData.position === "left";
-  const sessionId : any = localStorage.getItem('clone67ChatSessionId');
+  const sessionId: any = localStorage.getItem("clone67ChatSessionId");
 
-  const trackFormSubmission = ( formData : boolean ) => {
+  const trackFormSubmission = (formData: boolean) => {
     setHasFormData(formData);
-  }
+  };
 
   const fetchChatHistory = async () => {
+    if (!sessionId) return;
+    setIsLoading(true);
     try {
-      const response = await handleFetchChatHistory(sessionId, chatBotData.fetchChatHistoryUrl);
-      //setMessages(response.data.n8n);
-      console.log('chat history in layout', response);
+      const response = await handleFetchChatHistory(
+        sessionId,
+        chatBotData.fetchChatHistoryUrl
+      );
+      if (Array.isArray(response)) {
+        setMessages(response);
+      } else if (response) {
+        setMessages([response]);
+      } else {
+        setMessages([]);
+      }
+      console.log("chat history in layout", response);
+    } catch (error) {
+      console.log("Error fetching chat history", error);
+    } finally {
+      setIsLoading(false);
     }
-    catch(error){
-      console.log('Error fetching chat history', error);
-    }
-  }
+  };
 
-  // when a layout renders for the first time, it should fetch the messaage from db using a context provider.
-  useEffect(()=> {
+  useEffect(() => {
     fetchChatHistory();
-  }, [hasFormData]);
+  }, [hasFormData, sessionId]);
 
+  const sendMessage = async (userMessage: string) => {
+    setIsLoading(true);
+    setMessages((prev: Message[]) => [
+      ...prev,
+      { sender_type: "user", message: userMessage },
+    ]);
 
+    try {
+      const data = await handleEachChat(
+        userMessage,
+        chatBotData.pineconeNamespace,
+        chatBotData.onGoingChatUrl,
+        sessionId
+      );
+
+      setMessages((prev: Message[]) => [
+        ...prev,
+        {
+          sender_type: "bot",
+          message: data.n8n.response,
+          created_at: data.n8n.created_at,
+          suggested_prompts: data.n8n.suggested_prompt,
+        },
+      ]);
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages((prev: Message[]) => [
+        ...prev,
+        { sender_type: "bot", message: "Sorry, something went wrong." },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Common styles
   const panelStyle: React.CSSProperties = {
     position: "fixed",
     bottom: "112px",
@@ -55,14 +101,12 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
     WebkitBackdropFilter: "blur(16px)",
     borderRadius: "16px",
     border: "1px solid rgba(255, 255, 255, 0.3)",
-    boxShadow: "0 20px 25px -5px rgba(0,0,0,0.15), 0 10px 10px -5px rgba(0,0,0,0.1)",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
     fontFamily: "system-ui, -apple-system, sans-serif",
   };
 
-  // Header gradient bar
   const headerStyle: React.CSSProperties = {
     padding: "16px 20px",
     background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
@@ -74,12 +118,11 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
     boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
   };
 
-  // Avatar container
   const avatarWrapperStyle: React.CSSProperties = {
     position: "relative",
   };
 
-  const avatarCircleStyle : React.CSSProperties = {
+  const avatarCircleStyle: React.CSSProperties = {
     width: "44px",
     height: "44px",
     borderRadius: "50%",
@@ -89,7 +132,7 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
     justifyContent: "center",
   };
 
-  const onlineDotStyle : React.CSSProperties = {
+  const onlineDotStyle: React.CSSProperties = {
     position: "absolute",
     bottom: 0,
     right: 0,
@@ -100,21 +143,21 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
     border: "3px solid white",
   };
 
-  const titleStyle : React.CSSProperties = {
+  const titleStyle: React.CSSProperties = {
     fontSize: "18px",
     fontWeight: "600",
     margin: 0,
     lineHeight: "1.2",
   };
 
-  const subtitleStyle  : React.CSSProperties= {
+  const subtitleStyle: React.CSSProperties = {
     fontSize: "12px",
     opacity: 0.9,
     margin: 0,
     lineHeight: "1.3",
   };
 
-  const topButtonStyle : React.CSSProperties= {
+  const topButtonStyle: React.CSSProperties = {
     padding: "8px",
     borderRadius: "50%",
     background: "transparent",
@@ -123,7 +166,6 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
     transition: "background 0.2s",
   };
 
-  // Footer
   const footerStyle: React.CSSProperties = {
     padding: "12px 20px",
     borderTop: "1px solid rgba(255,255,255,0.2)",
@@ -141,43 +183,37 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
     fontWeight: "600",
   };
 
-  // Hover effect for close button
-  const handleTopButtonHover = (e: React.MouseEvent<HTMLButtonElement>, enter : boolean) => {
+  const handleTopButtonHover = (e: React.MouseEvent<HTMLButtonElement>, enter: boolean) => {
     e.currentTarget.style.background = enter ? "rgba(255,255,255,0.2)" : "transparent";
   };
 
-
-  const handleMessageFromForm = (msgs : any) => {
-    setMessages(msgs);
+  // Loading styles
+  const loadingContainerStyle: React.CSSProperties = {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    color: theme.fontColor,
+    opacity: 0.9,
+    fontSize: "14px",
   };
 
-  const sendMessage = async (userMessage : string) => {
-    setIsLoading(true);
-    setMessages((prev: Message[]) => [...prev, { sender_type: "user", message: userMessage }]);
-
-    try {
-      const data = await handleEachChat (
-        userMessage,
-        chatBotData.pineconeNamespace,
-        chatBotData.onGoingChatUrl,
-        sessionId,
-      );
-      
-      setMessages((prev : Message[]) => [...prev, { sender_type: "bot", message: data.n8n.response, created_at: data.n8n.created_at, suggested_prompts: data.n8n.suggested_prompt }]);
-
-    } catch (error) {
-      console.error("Chat error:", error);
-      setMessages((prev:Message[]) => [
-        ...prev,
-        { sender_type: "bot", message: "Sorry, something went wrong." },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
+  const spinnerStyle: React.CSSProperties = {
+    animation: "spin 1s linear infinite",
   };
 
   return (
     <div style={panelStyle}>
+      <style>
+        {`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+
       {/* Header */}
       <div style={headerStyle}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -195,15 +231,13 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
 
         <div style={{ display: "flex", alignItems: "left" }}>
           <button
-            onClick={() => setIsExpand(prev => !prev)}
+            onClick={() => setIsExpand((prev) => !prev)}
             aria-label="expand chat"
             style={topButtonStyle}
             onMouseEnter={(e) => handleTopButtonHover(e, true)}
             onMouseLeave={(e) => handleTopButtonHover(e, false)}
           >
-            {
-              isExpand ? <Minimize2 size={20} /> : <Maximize2 size={20} />
-            }
+            {isExpand ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
           </button>
 
           <button
@@ -218,25 +252,33 @@ const ChatPanel = ({ onClose, theme, chatBotData } : ChatPanelProps) => {
         </div>
       </div>
 
-      {/* Conditional Content */}
-      { !sessionId ? (
+      {/* Main Content */}
+      {sessionId ? (
+        <>
+          {isLoading && messages.length === 0 ? (
+            <div style={loadingContainerStyle}>
+              <Loader2 size={18} style={spinnerStyle} />
+              <span>Checking server…</span>
+            </div>
+          ) : (
+            <>
+              <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
+              <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
+            </>
+          )}
+        </>
+      ) : (
         <ChatPanelUserForm
           theme={theme}
           chatBotData={chatBotData}
           trackFormSubmission={trackFormSubmission}
         />
-      ) : (
-        <>
-          <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
-          <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
-        </>
       )}
 
       {/* Footer */}
       <div style={footerStyle}>
         <p style={footerTextStyle}>
-          powered by{" "}
-          <span style={footerBoldStyle}>clone67.com</span>
+          powered by <span style={footerBoldStyle}>clone67.com</span>
         </p>
       </div>
     </div>

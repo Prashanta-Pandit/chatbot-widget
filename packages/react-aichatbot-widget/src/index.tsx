@@ -45,9 +45,6 @@ const ChatBotWidget = ({
 
   const onMinimise = () => setIsOpen(prev => !prev);
 
-  // Get sessionId from localStorage (set by the  user form on first submission)
-  const sessionId : string  = localStorage.getItem('clone67ChatSessionId') ?? String(null);
-
   const theme : Theme = {
     primaryColor,
     secondaryColor,
