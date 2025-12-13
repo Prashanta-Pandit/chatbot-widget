@@ -14,6 +14,8 @@ const ChatButton = ({ onMinimise, isOpen, theme, chatBotData } : ChatButtonProps
   const posLeft = isLeft ? "32px" : "auto";
   const posRight = isLeft ? "auto" : "32px";
 
+  const sessionId: any = localStorage.getItem("clone67ChatSessionId");
+
   const buttonStyle : React.CSSProperties = {
     position: "fixed",
     bottom: "32px",
@@ -55,7 +57,7 @@ const ChatButton = ({ onMinimise, isOpen, theme, chatBotData } : ChatButtonProps
     >
       {isOpen ? <Minus size={20} strokeWidth={2.5} /> : <MessageCircle size={20} strokeWidth={2.5} />}
 
-      {!isOpen && <span style={badgeStyle} />}
+      {!isOpen && sessionId && <span style={badgeStyle} />}
     </button>
   );
 };

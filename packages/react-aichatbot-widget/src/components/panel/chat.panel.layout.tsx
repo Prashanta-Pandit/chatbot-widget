@@ -72,16 +72,21 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
         ...prev,
         {
           sender_type: "bot",
-          message: data.n8n.response,
+          message: data.n8n.message,
           created_at: data.n8n.created_at,
-          suggested_prompts: data.n8n.suggested_prompt,
+          suggested_prompts: data.n8n.suggested_prompts,
         },
       ]);
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev: Message[]) => [
         ...prev,
-        { sender_type: "bot", message: "Sorry, something went wrong." },
+        {
+          sender_type: "bot",
+          message: 'Sorry, there was an error processing your request. Please try again.',
+          created_at: new Date().toISOString(),
+          suggested_prompts: [],
+        },
       ]);
     } finally {
       setIsLoading(false);
@@ -105,6 +110,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
     flexDirection: "column",
     overflow: "hidden",
     fontFamily: "system-ui, -apple-system, sans-serif",
+    boxShadow: "0 10px 25px -3px rgba(0,0,0,0.1)",
   };
 
   const headerStyle: React.CSSProperties = {
@@ -199,20 +205,8 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
     fontSize: "14px",
   };
 
-  const spinnerStyle: React.CSSProperties = {
-    animation: "spin 1s linear infinite",
-  };
-
   return (
     <div style={panelStyle}>
-      <style>
-        {`
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        `}
-      </style>
 
       {/* Header */}
       <div style={headerStyle}>
@@ -257,8 +251,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
         <>
           {isLoading && messages.length === 0 ? (
             <div style={loadingContainerStyle}>
-              <Loader2 size={18} style={spinnerStyle} />
-              <span>Checking server…</span>
+              <span>connecting server....</span>
             </div>
           ) : (
             <>
