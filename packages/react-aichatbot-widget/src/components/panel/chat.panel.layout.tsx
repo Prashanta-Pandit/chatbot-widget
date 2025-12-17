@@ -18,6 +18,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const [hasFormData, setHasFormData] = useState<boolean>(false);
+  const [ error, setError ] = useState<string | null>(null);
 
   const isLeft = chatBotData.position === "left";
   const sessionId: any = localStorage.getItem("clone67ChatSessionId");
@@ -34,14 +35,19 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
         sessionId,
         chatBotData.fetchChatHistoryUrl
       );
-      if (Array.isArray(response)) {
-        setMessages(response);
-      } else if (response) {
-        setMessages([response]);
-      } else {
-        setMessages([]);
+
+      const chats = response.chats;
+
+      if(response.status === 'error'){
+        setError(response.message);
+        return;
       }
-      console.log("chat history in layout", response);
+
+      if(response.status === 'success'){ 
+        setMessages(chats);
+        setError(null);
+      }
+
     } catch (error) {
       console.log("Error fetching chat history", error);
     } finally {
@@ -194,7 +200,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
   };
 
   // Loading styles
-  const loadingContainerStyle: React.CSSProperties = {
+  const InfoContainerStyle: React.CSSProperties = {
     flex: 1,
     display: "flex",
     alignItems: "center",
@@ -250,13 +256,21 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
       {sessionId ? (
         <>
           {isLoading && messages.length === 0 ? (
-            <div style={loadingContainerStyle}>
+            <div style={InfoContainerStyle}>
               <span>connecting server....</span>
             </div>
           ) : (
             <>
-              <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
-              <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
+            {error ?  (
+                <div style={InfoContainerStyle}>
+                  <span>{error}</span>
+                </div>
+                ) :
+                <>
+                  <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
+                  <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
+                </>
+              }
             </>
           )}
         </>
