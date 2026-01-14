@@ -36,16 +36,19 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
         chatBotData.fetchChatHistoryUrl
       );
 
-      const chats = response.chats;
+      const chats = response.data.messages;
 
-      if(response.status === 'error'){
-        setError(response.message);
-        return;
-      }
+      // if(response.success){
+      //   setError(response.message);
+      //   return;
+      // }
 
-      if(response.status === 'success'){ 
+      if(response.data.status){ 
         setMessages(chats);
         setError(null);
+      }
+      else{
+        setError("something went wrong, please try again later.");
       }
 
     } catch (error) {
