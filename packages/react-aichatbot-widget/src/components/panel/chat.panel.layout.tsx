@@ -38,11 +38,6 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
 
       const chats = response.data.messages;
 
-      // if(response.success){
-      //   setError(response.message);
-      //   return;
-      // }
-
       if(response.data.status){ 
         setMessages(chats);
         setError(null);
