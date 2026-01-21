@@ -3,6 +3,8 @@ import { MessageCircle, Minimize2, Maximize2, X, Loader2 } from "lucide-react";
 import UserInputForm from "./chat.panel.userinputform";
 import ChatPanelMessagesBox from "./chat.panel.messagebox";
 import ChatPanelUserForm from "./chat.panel.userform";
+import WSChatPanel from './webSocket/ws.chatPanel';
+import WSChatBox from './webSocket/ws.chatBox';
 import { handleEachChat, handleFetchChatHistory } from "../../n8n/n8n";
 
 import { ChatBotData, Theme, Message } from "../types/types";
@@ -265,19 +267,21 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
                 </div>
                 ) :
                 <>
-                  <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
-                  <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} />
+                  {/* <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
+                  <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} /> */}
+                  <WSChatBox />
                 </>
               }
             </>
           )}
         </>
       ) : (
-        <ChatPanelUserForm
-          theme={theme}
-          chatBotData={chatBotData}
-          trackFormSubmission={trackFormSubmission}
-        />
+        // <ChatPanelUserForm
+        //   theme={theme}
+        //   chatBotData={chatBotData}
+        //   trackFormSubmission={trackFormSubmission}
+        // />
+        <WSChatPanel />
       )}
 
       {/* Footer */}
