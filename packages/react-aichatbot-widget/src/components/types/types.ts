@@ -13,9 +13,6 @@ export interface ChatBotData {
     name : string;
     subTitle : string;
     welcomeText : string;
-    onGoingChatUrl : string;
-    fetchChatHistoryUrl: string;
-    initiateChatUrl : string;
     pineconeNamespace : string;
     position : string;
 }

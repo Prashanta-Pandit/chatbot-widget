@@ -7,9 +7,6 @@ import { Theme, ChatBotData  } from './components/types/types';
 
 export interface ChatBotWidgetProps {
     pineconeNamespace : string;
-    onGoingChatUrl : string;
-    initiateChatUrl : string;
-    fetchChatHistoryUrl: string;
     primaryColor ?: string;
     secondaryColor ?: string;
     backgroundColor : string;
@@ -23,9 +20,6 @@ export interface ChatBotWidgetProps {
 
 const ChatBotWidget = ({
   pineconeNamespace,
-  onGoingChatUrl,
-  initiateChatUrl,
-  fetchChatHistoryUrl,
   primaryColor = "#3b82f6",
   secondaryColor = "#8b5cf6",
   backgroundColor = "#ffffff",
@@ -59,9 +53,6 @@ const ChatBotWidget = ({
     name,
     subTitle,
     welcomeText,
-    onGoingChatUrl,
-    fetchChatHistoryUrl,
-    initiateChatUrl,
     pineconeNamespace,
     position,
   };

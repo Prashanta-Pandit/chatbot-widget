@@ -18,8 +18,6 @@ const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
     const [ messages, setMessages ] = useState<string>("");
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
-    var responseFromServer: string;
-
     useEffect(() => {
 
         var sessionId = localStorage.getItem("clone67ChatSessionId");
@@ -44,22 +42,18 @@ const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
         }
 
         socket.onmessage = async (event) => {
-            setIsLoading(false);
-
-            try{
+            setIsLoading(true);
+            
+            try {
                 const messages = await event.data;
-                console.log("Response from server: ", messages);
-
-                responseFromServer = messages; // assign server message to a variable. This helps track each messages. 
-                setMessages( responseFromServer );
-            }
-            catch(err){
+                setMessages(messages);
+            } catch (err) {
                 console.error("Error handling server message:", err);
-            }
-            finally{
+            } finally {
+                // always reset loading
                 setIsLoading(false);
             }
-        }
+        };
 
         socket.onerror = (error) => {
             setWebSocketStatus("Server error occurred");
@@ -165,7 +159,7 @@ const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
     return (
         <div>
             {webSocketStatus && <p style={websocketstateStyle}>{webSocketStatus}</p>}
-            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} />
+            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} isLoading={isLoading} />
             <div style={containerStyle}>
                 <form onSubmit={handleSubmit} style={wrapperStyle}>
                     <input
