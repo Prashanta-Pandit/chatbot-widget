@@ -24,6 +24,18 @@ const WSChatBox = ({ messages, theme, isLoading }: ChatBoxProps) => {
         }
     };
 
+    const formatTimestamp = (timestamp: number): string => {
+        return new Date(timestamp).toLocaleString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        });
+    };
+
     // Add new messages
     useEffect(() => {
         const msgObj = convertToJSON(messages);
@@ -95,9 +107,9 @@ const WSChatBox = ({ messages, theme, isLoading }: ChatBoxProps) => {
                         }}>
                             <span style={{ fontSize: "10px", opacity: 0.55, color: theme.fontColor }}>
                                 {chat.sender_type === "user" ? "You" : "AI"}
+                                {` • ${formatTimestamp(chat.created_at)}`}
                             </span>
                         </div>
-
                         
                         <div style={chat.sender_type === "user" ? bubbleStyle("user") : bubbleStyle("ai")}>
                             {chat.message}
