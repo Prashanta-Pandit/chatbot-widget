@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Message } from '../../types/types'
+import { Message, ChatBotData, Theme } from '../../types/types'
 
 interface ChatBoxProps {
     messages: string;
+    chatBotData: ChatBotData;
+    theme: Theme
 }
 
-const  WSChatBox = ( { messages } : ChatBoxProps ) => {
+const  WSChatBox = ( { messages, chatBotData, theme } : ChatBoxProps ) => {
 
     const [ chats , setChats ] = useState<Message[]>([]);
 
@@ -18,7 +20,7 @@ const  WSChatBox = ( { messages } : ChatBoxProps ) => {
         } catch ( error ) {
             console.error( "Error parsing message string to JSON:", error );
             return null;
-        }   
+        }
     }
 
     useEffect( () => {
@@ -28,30 +30,87 @@ const  WSChatBox = ( { messages } : ChatBoxProps ) => {
         }
     }, [ messages ] );
 
-    console.log("chats:", chats);
     const flatChats = chats.flat();
 
+    // Base container
+    const containerStyle: React.CSSProperties = {
+        height: "290px", 
+        overflowY: "auto", 
+        padding: "20px",
+        background: theme.backgroundColor,
+        color: theme.fontColor,
+        borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
+    };
+
+
+    // Message wrapper (aligns user vs bot)
+    const messageWrapperStyle = (sender_type : string) : React.CSSProperties => ({
+        display: "flex",
+        justifyContent: sender_type === "user" ? "flex-end" : "flex-start",
+        width: "100%",
+    });
+
+    // Message bubble container with timestamp
+    const bubbleContainerStyle  : React.CSSProperties = {
+        display: "flex",
+        flexDirection: "column",
+        maxWidth: "80%",
+    };
+
+    // Message bubble style
+    const bubbleStyle = (sender_type: string): React.CSSProperties => ({
+        padding: "12px 16px",
+        borderRadius:
+            sender_type === "user"
+                ? "16px 0 16px 16px" // top-right flat for user
+                : "0 16px 16px 16px", // top-left flat for AI
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "2px` solid #ffffff",
+        fontSize: "14px",
+        lineHeight: "1.5",
+        background: sender_type === "user" ? theme.primaryColor : theme.backgroundColor,
+        color: theme.fontColor,
+        wordWrap: "break-word",
+    });
+
+    const typingBubbleStyle: React.CSSProperties = {
+        ...bubbleStyle("bot"),
+        animation: 'fadeIn 0.3s ease-in-out, pulse 1.5s ease-in-out infinite',
+        animationDelay: '0s, 0.3s'
+    };
+
     return (
-        <div
-            style={{
-                    padding: '100px',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    scrollbarColor: '#888 #e0e0e0',
-                    scrollbarWidth: 'thin',
-                    height: '400px',
-                    overflowY: 'scroll'
-                }}
-        >
-            <div>
+        <div style={containerStyle}>
                 {flatChats.map((chat, index) => (
-                    <div key={index}>
-                        <p>{chat.created_at}</p>
-                        <p>{chat.sender_type}</p>
-                        <p>{chat.message}</p>
+                    <div key={index} style={messageWrapperStyle(chat.sender_type)}>
+                        <div style={bubbleContainerStyle}>
+
+                            {/* Icon for user response */}
+                            {
+                                <div style={{ display: "flex", alignItems: "center", gap: "4px", justifyContent: chat.sender_type === "user" ? "flex-end" : "flex-start", marginRight: "4px", marginBottom: "2px" }}>
+                                    <span
+                                    style={{
+                                        fontSize: "10px",
+                                        opacity: 0.55,
+                                        color: theme.fontColor,
+                                    }}
+                                    >
+                                    {
+                                        chat.sender_type === "user" ? "You" : "AI"
+                                    }
+                                    </span>
+                                </div>
+                            }
+                            {/* message bubble */}
+                            <div style={chat.sender_type === "user" ? bubbleStyle("user") : typingBubbleStyle}>
+                                {chat.message}
+                            </div>
+                        </div>
                     </div>
                 ))}
-            </div>
         </div>
     )
 }

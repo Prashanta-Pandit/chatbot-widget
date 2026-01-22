@@ -2,12 +2,21 @@ import React, {useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ChatBox from './ws.chatBox';
 import { handleWebSocket } from './ws';
+import { ChatBotData, Theme } from '../../types/types';
+import { Send } from "lucide-react";
 
-const WSChatPanel = () => {
+interface WSChatPanelProps {
+    chatBotData: ChatBotData
+    theme: Theme
+}
+
+const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
+
     const [ ws, setWs ] = useState<WebSocket | null>(null);
     const [ inputValue, setInputValue ] = useState<string>("");
-    const [ webSocketStatus, setWebSocketStatus ] = useState<string>("connecting to server...");
+    const [ webSocketStatus, setWebSocketStatus ] = useState<string>("Connecting to server...");
     const [ messages, setMessages ] = useState<string>("");
+    const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
     var responseFromServer: string;
 
@@ -21,18 +30,35 @@ const WSChatPanel = () => {
             localStorage.setItem("clone67ChatSessionId", sessionId);
         }
 
-        const { socket } = handleWebSocket( sessionId, "ghgghgh" );
+        const { socket } = handleWebSocket( sessionId, chatBotData.pineconeNamespace );
+
         setWs( socket );
 
         socket.onopen = () => {
             setWebSocketStatus("Server connected");
+
+            setTimeout(()=> {
+                setWebSocketStatus("online");
+            }, 3000);
+
         }
 
-        socket.onmessage = (event) => {
-            const messages = event.data;
-            console.log("Response from server: ", messages);
-            responseFromServer = messages;
-            setMessages( responseFromServer );
+        socket.onmessage = async (event) => {
+            setIsLoading(false);
+
+            try{
+                const messages = await event.data;
+                console.log("Response from server: ", messages);
+
+                responseFromServer = messages; // assign server message to a variable. This helps track each messages. 
+                setMessages( responseFromServer );
+            }
+            catch(err){
+                console.error("Error handling server message:", err);
+            }
+            finally{
+                setIsLoading(false);
+            }
         }
 
         socket.onerror = (error) => {
@@ -42,13 +68,15 @@ const WSChatPanel = () => {
 
         socket.onclose = () => {
             setWebSocketStatus("Server disconnected");
+
+            setTimeout(()=> {
+                setWebSocketStatus('offline');
+            }, 3000);
         }
 
     }, []);
 
-    const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        
+    const handleSubmit = async () => {
         if(ws && ws.readyState === WebSocket.OPEN){
              ws.send(JSON.stringify(inputValue));
         }
@@ -60,28 +88,123 @@ const WSChatPanel = () => {
             message: inputValue
         };
 
-        setMessages( JSON.stringify(userMessage) );
+        setMessages( JSON.stringify(userMessage) ); // append user message to message state.
 
         setInputValue("");
     }
 
+    const handleKeyPress = (e : React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          handleSubmit();
+        }
+    };
+
+    const inputStyle : React.CSSProperties = {
+        flex: 1,
+        padding: "12px 16px",
+        background: theme.backgroundColor,
+        color: theme.fontColor,
+        border: `1px solid ${theme.fontColor}`,
+        borderRadius: "12px",
+        fontSize: "14px",
+        outline: "none",
+        transition: "all 0.2s ease",
+        opacity: isLoading ? 0.5 : 1,
+        cursor: isLoading ? "not-allowed" : "text",
+        boxShadow: "none",
+    };
+    
+      // Send button
+    const buttonStyle : React.CSSProperties = {
+        padding: "12px 20px",
+        borderRadius: "12px",
+        background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
+        color: theme.fontColor,
+        border: "none",
+        cursor: (isLoading || !inputValue.trim()) ? "not-allowed" : "pointer",
+        opacity: (isLoading || !inputValue.trim()) ? 0.5 : 1,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        fontWeight: "600",
+        fontSize: "14px",
+        transition: "all 0.2s ease",
+        minWidth: "48px",
+    };
+
+     // Container (bottom input bar)
+    const containerStyle : React.CSSProperties = {
+        padding: "16px",
+        borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+        borderColor: theme.fontColor,
+        background: theme.backgroundColor,
+        flexShrink: 0,
+    };
+    
+    const wrapperStyle : React.CSSProperties = {
+        display: "flex",
+        gap: "12px",
+        alignItems: "center",
+    };
+
+   const websocketstateStyle: React.CSSProperties = {
+        textAlign: "center",
+        padding: "4px",
+        color: 
+            webSocketStatus === "Server connected" || webSocketStatus === "online"
+                ? "#09BA00"
+                : webSocketStatus === "Connecting to server..."
+                ? "#DED000"
+                : "#FF3408",
+        backgroundColor: "#ffffff",
+        fontSize: "15px",
+    };
+
     return (
         <div>
-            {webSocketStatus && <p>{webSocketStatus}</p>}
-            <ChatBox  messages={messages} />
-            <form onSubmit={handleSubmit}>
-                <input 
-                    style={{
-                        padding: '8px',
-                        marginRight: '15px',
-                        borderRadius: '4px',
-                        border: '1px solid #ccc'
-                    }}
-                    type='text'
-                    onChange={(e) => setInputValue(e.target.value)}
-                />
-                <button type="submit">Submit</button>
-            </form>
+            {webSocketStatus && <p style={websocketstateStyle}>{webSocketStatus}</p>}
+            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} />
+            <div style={containerStyle}>
+                <form onSubmit={handleSubmit} style={wrapperStyle}>
+                    <input
+                        type="text"
+                        placeholder="Type a message..."
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={handleKeyPress}
+                        disabled={isLoading}
+                        style={inputStyle}
+                        onFocus={(e) => {
+                            e.target.style.boxShadow = "0 0 0 3px rgba(100, 150, 255, 0.3)";
+                            e.target.style.borderColor = "#60a5fa";
+                        }}
+                        onBlur={(e) => {
+                            e.target.style.boxShadow = "none";
+                            e.target.style.borderColor = theme.fontColor;
+                        }}
+                    />
+                    <button
+                        onClick={handleSubmit}
+                        disabled={isLoading || !inputValue.trim()}
+                        style={buttonStyle}
+                        aria-label="Send message"
+                        onMouseEnter={(e) => {
+                            if (!isLoading && inputValue.trim()) {
+                            e.currentTarget.style.transform = "translateY(-2px)";
+                            e.currentTarget.style.boxShadow = "0 8px 16px rgba(0,0,0,0.15)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.boxShadow = "none";
+                        }}
+                        >
+                        <Send size={18} />
+                    </button>
+                </form>
+            </div>
         </div>
     )
 }

@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { MessageCircle, Minimize2, Maximize2, X, Loader2 } from "lucide-react";
-import UserInputForm from "./chat.panel.userinputform";
-import ChatPanelMessagesBox from "./chat.panel.messagebox";
-import ChatPanelUserForm from "./chat.panel.userform";
+import React, { useState } from "react";
+import { MessageCircle, Minimize2, Maximize2, X, } from "lucide-react";
 import WSChatPanel from './webSocket/ws.chatPanel';
-import WSChatBox from './webSocket/ws.chatBox';
-import { handleEachChat, handleFetchChatHistory } from "../../n8n/n8n";
 
-import { ChatBotData, Theme, Message } from "../types/types";
+import { ChatBotData, Theme } from "../types/types";
 
 interface ChatPanelProps {
   onClose: () => void;
@@ -16,88 +11,10 @@ interface ChatPanelProps {
 }
 
 const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [isExpand, setIsExpand] = useState<boolean>(false);
-  const [hasFormData, setHasFormData] = useState<boolean>(false);
-  const [ error, setError ] = useState<string | null>(null);
 
   const isLeft = chatBotData.position === "left";
-  const sessionId: any = localStorage.getItem("clone67ChatSessionId");
-
-  const trackFormSubmission = (formData: boolean) => {
-    setHasFormData(formData);
-  };
-
-  const fetchChatHistory = async () => {
-    if (!sessionId) return;
-    setIsLoading(true);
-    try {
-      const response = await handleFetchChatHistory(
-        sessionId,
-        chatBotData.fetchChatHistoryUrl
-      );
-
-      const chats = response.data.messages;
-
-      if(response.data.status){ 
-        setMessages(chats);
-        setError(null);
-      }
-      else{
-        setError("something went wrong, please try again later.");
-      }
-
-    } catch (error) {
-      console.log("Error fetching chat history", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchChatHistory();
-  }, [hasFormData, sessionId]);
-
-  const sendMessage = async (userMessage: string) => {
-    setIsLoading(true);
-    setMessages((prev: Message[]) => [
-      ...prev,
-      { sender_type: "user", message: userMessage },
-    ]);
-
-    try {
-      const data = await handleEachChat(
-        userMessage,
-        chatBotData.pineconeNamespace,
-        chatBotData.onGoingChatUrl,
-        sessionId
-      );
-
-      setMessages((prev: Message[]) => [
-        ...prev,
-        {
-          sender_type: "bot",
-          message: data.n8n.message,
-          created_at: data.n8n.created_at,
-          suggested_prompts: data.n8n.suggested_prompts,
-        },
-      ]);
-    } catch (error) {
-      console.error("Chat error:", error);
-      setMessages((prev: Message[]) => [
-        ...prev,
-        {
-          sender_type: "bot",
-          message: 'Sorry, there was an error processing your request. Please try again.',
-          created_at: new Date().toISOString(),
-          suggested_prompts: [],
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Common styles
   const panelStyle: React.CSSProperties = {
@@ -199,18 +116,6 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
     e.currentTarget.style.background = enter ? "rgba(255,255,255,0.2)" : "transparent";
   };
 
-  // Loading styles
-  const InfoContainerStyle: React.CSSProperties = {
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
-    color: theme.fontColor,
-    opacity: 0.9,
-    fontSize: "14px",
-  };
-
   return (
     <div style={panelStyle}>
 
@@ -253,35 +158,8 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
       </div>
 
       {/* Main Content */}
-      {sessionId ? (
-        <>
-          {isLoading && messages.length === 0 ? (
-            <div style={InfoContainerStyle}>
-              <span>connecting server....</span>
-            </div>
-          ) : (
-            <>
-            {error ?  (
-                <div style={InfoContainerStyle}>
-                  <span>{error}</span>
-                </div>
-                ) :
-                <>
-                  {/* <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
-                  <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} /> */}
-                </>
-              }
-            </>
-          )}
-        </>
-      ) : (
-        // <ChatPanelUserForm
-        //   theme={theme}
-        //   chatBotData={chatBotData}
-        //   trackFormSubmission={trackFormSubmission}
-        // />
-        <WSChatPanel />
-      )}
+      
+      <WSChatPanel chatBotData={chatBotData} theme={theme} />
 
       {/* Footer */}
       <div style={footerStyle}>
