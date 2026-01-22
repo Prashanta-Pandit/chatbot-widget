@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Message, ChatBotData, Theme } from '../../types/types'
 
 interface ChatBoxProps {
@@ -10,6 +10,7 @@ interface ChatBoxProps {
 const  WSChatBox = ( { messages, chatBotData, theme } : ChatBoxProps ) => {
 
     const [ chats , setChats ] = useState<Message[]>([]);
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     const convertToJSON = ( msgString : string ) => {
         if(msgString === "") return null;
@@ -105,7 +106,7 @@ const  WSChatBox = ( { messages, chatBotData, theme } : ChatBoxProps ) => {
                                 </div>
                             }
                             {/* message bubble */}
-                            <div style={chat.sender_type === "user" ? bubbleStyle("user") : typingBubbleStyle}>
+                            <div style={chat.sender_type === "user" ? bubbleStyle("user") : bubbleStyle("ai")}>
                                 {chat.message}
                             </div>
                         </div>
