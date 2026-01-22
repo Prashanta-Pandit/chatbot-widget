@@ -44,17 +44,14 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
         }
 
         socket.onmessage = async (event) => {
-            setIsLoading(true);
-            
             try {
                 const messages = await event.data;
                 setMessages(messages);
+
+                setIsLoading(false);
+
             } catch (err) {
                 console.error("Error handling server message:", err);
-                
-            } finally {
-                // always reset loading
-                setIsLoading(false);
             }
         };
 
@@ -72,10 +69,15 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
 
     }, []);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e : any) => {
+        e.preventDefault();
+
         if(ws && ws.readyState === WebSocket.OPEN){
              ws.send(JSON.stringify(inputValue));
         }
+
+        // AI starts processing
+        setIsLoading(true);
 
         // compose a user input message same as a server message format
         const userMessage = {
@@ -92,7 +94,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
     const handleKeyPress = (e : React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault();
-          handleSubmit();
+          handleSubmit(e);
         }
     };
 
@@ -106,8 +108,6 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
         fontSize: "14px",
         outline: "none",
         transition: "all 0.2s ease",
-        opacity: isLoading ? 0.5 : 1,
-        cursor: isLoading ? "not-allowed" : "text",
         boxShadow: "none",
     };
     
@@ -118,8 +118,6 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
         background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
         color: theme.fontColor,
         border: "none",
-        cursor: (isLoading || !inputValue.trim()) ? "not-allowed" : "pointer",
-        opacity: (isLoading || !inputValue.trim()) ? 0.5 : 1,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -158,10 +156,27 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
         fontSize: "10px",
     };
 
+    const typingStyle: React.CSSProperties = {
+        padding: "8px",
+        animation: 'fadeIn 0.3s ease-in-out, pulse 1.5s ease-in-out infinite',
+        animationDelay: '0s, 0.3s',
+        fontSize: "10px",
+        color: theme.fontColor,
+    };
+
     return (
-        <div>
+        <>
             {webSocketStatus && <p style={websocketstateStyle}>{webSocketStatus}</p>}
-            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} isLoading={isLoading} />
+            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} />
+            
+            {/* Typing indicator */}
+            {
+                isLoading && 
+                <div style={typingStyle}>
+                    {`${chatBotData.name} is typing...`}
+                </div>
+            }
+
             <div style={containerStyle}>
                 <form onSubmit={handleSubmit} style={wrapperStyle}>
                     <input
@@ -170,7 +185,6 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={handleKeyPress}
-                        disabled={isLoading}
                         style={inputStyle}
                         onFocus={(e) => {
                             e.target.style.boxShadow = "0 0 0 3px rgba(100, 150, 255, 0.3)";
@@ -183,25 +197,14 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
                     />
                     <button
                         onClick={handleSubmit}
-                        disabled={isLoading || !inputValue.trim()}
                         style={buttonStyle}
                         aria-label="Send message"
-                        onMouseEnter={(e) => {
-                            if (!isLoading && inputValue.trim()) {
-                            e.currentTarget.style.transform = "translateY(-2px)";
-                            e.currentTarget.style.boxShadow = "0 8px 16px rgba(0,0,0,0.15)";
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = "translateY(0)";
-                            e.currentTarget.style.boxShadow = "none";
-                        }}
                         >
                         <Send size={18} />
                     </button>
                 </form>
             </div>
-        </div>
+        </>
     )
 }
 
