@@ -36,7 +36,11 @@ const  WSChatBox = ( { messages } : ChatBoxProps ) => {
             style={{
                     padding: '100px',
                     borderRadius: '4px',
-                    border: '1px solid #ccc'
+                    border: '1px solid #ccc',
+                    scrollbarColor: '#888 #e0e0e0',
+                    scrollbarWidth: 'thin',
+                    height: '400px',
+                    overflowY: 'scroll'
                 }}
         >
             <div>
