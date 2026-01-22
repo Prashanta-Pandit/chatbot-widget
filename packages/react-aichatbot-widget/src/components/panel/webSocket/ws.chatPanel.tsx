@@ -8,9 +8,10 @@ import { Send } from "lucide-react";
 interface WSChatPanelProps {
     chatBotData: ChatBotData
     theme: Theme
+    onlineStatus: (status : string) => void
 }
 
-const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
+const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) => {
 
     const [ ws, setWs ] = useState<WebSocket | null>(null);
     const [ inputValue, setInputValue ] = useState<string>("");
@@ -35,10 +36,11 @@ const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
         socket.onopen = () => {
             setWebSocketStatus("Server connected");
 
-            setTimeout(()=> {
-                setWebSocketStatus("online");
-            }, 3000);
+            setTimeout(() => {
+                setWebSocketStatus("");
+            }, 2000);
 
+            onlineStatus("online");
         }
 
         socket.onmessage = async (event) => {
@@ -49,6 +51,7 @@ const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
                 setMessages(messages);
             } catch (err) {
                 console.error("Error handling server message:", err);
+                
             } finally {
                 // always reset loading
                 setIsLoading(false);
@@ -58,14 +61,13 @@ const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
         socket.onerror = (error) => {
             setWebSocketStatus("Server error occurred");
             console.error("WebSocket error:", error);
+            onlineStatus("offline");
         }
 
         socket.onclose = () => {
             setWebSocketStatus("Server disconnected");
+            onlineStatus("offline");
 
-            setTimeout(()=> {
-                setWebSocketStatus('offline');
-            }, 3000);
         }
 
     }, []);
@@ -145,15 +147,15 @@ const WSChatPanel = ( { chatBotData, theme } : WSChatPanelProps) => {
 
    const websocketstateStyle: React.CSSProperties = {
         textAlign: "center",
-        padding: "4px",
-        color: 
+        padding: "2px",
+        backgroundColor: 
             webSocketStatus === "Server connected" || webSocketStatus === "online"
                 ? "#09BA00"
                 : webSocketStatus === "Connecting to server..."
                 ? "#DED000"
                 : "#FF3408",
-        backgroundColor: "#ffffff",
-        fontSize: "15px",
+        color: "#ffffff",
+        fontSize: "10px",
     };
 
     return (

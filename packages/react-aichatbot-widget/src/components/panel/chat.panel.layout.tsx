@@ -13,6 +13,7 @@ interface ChatPanelProps {
 const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
 
   const [isExpand, setIsExpand] = useState<boolean>(false);
+  const [ isOnline, setIsOnline ] = useState<boolean>(false);
 
   const isLeft = chatBotData.position === "left";
 
@@ -67,7 +68,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
     right: 0,
     width: "14px",
     height: "14px",
-    backgroundColor: "#34d399",
+    backgroundColor: isOnline ? "#00BF49" : "#F54927",
     borderRadius: "50%",
     border: "3px solid white",
   };
@@ -116,6 +117,15 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
     e.currentTarget.style.background = enter ? "rgba(255,255,255,0.2)" : "transparent";
   };
 
+  const onlineStatus = (status : string) => {
+    if(status === "online"){
+        setIsOnline(true);
+    }
+    else{
+        setIsOnline(false);
+    }
+  }
+
   return (
     <div style={panelStyle}>
 
@@ -159,7 +169,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
 
       {/* Main Content */}
       
-      <WSChatPanel chatBotData={chatBotData} theme={theme} />
+      <WSChatPanel chatBotData={chatBotData} theme={theme} onlineStatus={onlineStatus} />
 
       {/* Footer */}
       <div style={footerStyle}>

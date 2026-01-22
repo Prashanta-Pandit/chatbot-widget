@@ -13,9 +13,6 @@ export default function App() {
 
       <ChatBotWidget
         pineconeNamespace="cloney-1e018f87-e5bc-480e-95c3-739809a0c47d"
-        onGoingChatUrl="https://request-n8n-chat-ongoing.clone67.com/"
-        initiateChatUrl="https://request-n8n-chat-initiate.clone67.com/"
-        fetchChatHistoryUrl="https://request-n8n-chat-fetch-chat-history.clone67.com/"
         primaryColor="#edd11a"      
         secondaryColor="#edd11a"
         fontColor="#000000"

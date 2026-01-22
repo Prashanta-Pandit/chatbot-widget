@@ -8,11 +8,9 @@ interface ChatBoxProps {
     isLoading: boolean;
 }
 
-const WSChatBox = ({ messages, theme, isLoading }: ChatBoxProps) => {
+const WSChatBox = ({ messages, chatBotData, theme, isLoading }: ChatBoxProps) => {
     const [chats, setChats] = useState<Message[]>([]);
     const messagesEndRef = useRef<HTMLDivElement | null>(null); // ref to the last message
-
-    console.log("loading state in chatbox: ", isLoading);
 
     const convertToJSON = (msgString: string) => {
         if (msgString === "") return null;
@@ -26,12 +24,8 @@ const WSChatBox = ({ messages, theme, isLoading }: ChatBoxProps) => {
 
     const formatTimestamp = (timestamp: number): string => {
         return new Date(timestamp).toLocaleString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "2-digit",
             hour: "2-digit",
             minute: "2-digit",
-            second: "2-digit",
             hour12: true
         });
     };
@@ -81,7 +75,7 @@ const WSChatBox = ({ messages, theme, isLoading }: ChatBoxProps) => {
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
         fontSize: "14px",
         lineHeight: "1.5",
-        background: sender_type === "user" ? theme.primaryColor : theme.backgroundColor,
+        background: sender_type === "user" ? theme.primaryColor : "#f5f5f5",
         color: theme.fontColor,
         wordWrap: "break-word",
     });
@@ -106,14 +100,16 @@ const WSChatBox = ({ messages, theme, isLoading }: ChatBoxProps) => {
                             marginBottom: "2px"
                         }}>
                             <span style={{ fontSize: "10px", opacity: 0.55, color: theme.fontColor }}>
-                                {chat.sender_type === "user" ? "You" : "AI"}
-                                {` • ${formatTimestamp(chat.created_at)}`}
+                                {chat.sender_type === "user" ? "You" : `${chatBotData.name}`}
                             </span>
                         </div>
                         
                         <div style={chat.sender_type === "user" ? bubbleStyle("user") : bubbleStyle("ai")}>
                             {chat.message}
                         </div>
+                        <span style={{ fontSize: "10px", opacity: 0.55, color: theme.fontColor, alignSelf: chat.sender_type === "user" ? "flex-end" : "flex-start", marginTop: "4px" }}>
+                                {`${formatTimestamp(chat.created_at)}`}
+                        </span>
                     </div>
                 </div>
             ))}
