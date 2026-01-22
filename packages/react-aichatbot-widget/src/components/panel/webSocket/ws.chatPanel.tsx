@@ -6,21 +6,33 @@ import { handleWebSocket } from './ws';
 const WSChatPanel = () => {
     const [ ws, setWs ] = useState<WebSocket | null>(null);
     const [ inputValue, setInputValue ] = useState<string>("");
-    const [ webSocketStatus, setWebSocketStatus ] = useState<string>("");
+    const [ webSocketStatus, setWebSocketStatus ] = useState<string>("connecting to server...");
     const [ messages, setMessages ] = useState<string>("");
 
+    var responseFromServer: string;
+
     useEffect(() => {
-        var sessionId = uuidv4();
+
+        var sessionId = localStorage.getItem("clone67ChatSessionId");
+
+        // only create a new session ID if one doesn't exist
+        if (sessionId === null) {
+            sessionId = uuidv4();
+            localStorage.setItem("clone67ChatSessionId", sessionId);
+        }
+
         const { socket } = handleWebSocket( sessionId, "ghgghgh" );
         setWs( socket );
 
         socket.onopen = () => {
             setWebSocketStatus("Server connected");
-        }  
+        }
 
         socket.onmessage = (event) => {
             const messages = event.data;
-            setMessages(messages);
+            console.log("Response from server: ", messages);
+            responseFromServer = messages;
+            setMessages( responseFromServer );
         }
 
         socket.onerror = (error) => {
@@ -32,20 +44,25 @@ const WSChatPanel = () => {
             setWebSocketStatus("Server disconnected");
         }
 
-        // Cleanup on unmount
-        return () => {
-            if (socket) {
-                socket.close();
-            }
-        };
-
     }, []);
 
-    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        
         if(ws && ws.readyState === WebSocket.OPEN){
-            ws.send(JSON.stringify(inputValue));
+             ws.send(JSON.stringify(inputValue));
         }
+
+        // compose a user input message same as a server message format
+        const userMessage = {
+            created_at: Date.now(),
+            sender_type: "user",
+            message: inputValue
+        };
+
+        setMessages( JSON.stringify(userMessage) );
+
+        setInputValue("");
     }
 
     return (

@@ -21,11 +21,8 @@ export interface ChatBotData {
 }
 
 export interface Message {
-    attachments?: string;
-    created_at?: string;
-    id?: number;
-    message: string;
-    sender_type: 'bot' | 'user';
-    session_id?: string;
-    suggested_prompts?: string[] ;
+  created_at: number;
+  message: string ;
+  suggested_prompt: string[];
+  sender_type: 'user' | 'bot';
 }

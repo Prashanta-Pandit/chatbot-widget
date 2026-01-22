@@ -269,7 +269,6 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
                 <>
                   {/* <ChatPanelMessagesBox messages={messages} isLoading={isLoading} theme={theme} />
                   <UserInputForm onSendMessage={sendMessage} isLoading={isLoading} theme={theme} /> */}
-                  <WSChatBox />
                 </>
               }
             </>
