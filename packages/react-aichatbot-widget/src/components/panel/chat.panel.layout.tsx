@@ -97,7 +97,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
   };
 
   const footerStyle: React.CSSProperties = {
-    padding: isExpand ? "12px 20px" : "8px 20px",
+    padding: isExpand ? "30px 20px" : "8px 20px",
     borderTop: "1px solid rgba(255,255,255,0.2)",
     background: theme.backgroundColor,
     textAlign: "center",
