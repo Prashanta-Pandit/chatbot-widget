@@ -9,9 +9,10 @@ interface WSChatPanelProps {
     chatBotData: ChatBotData
     theme: Theme
     onlineStatus: (status : string) => void
+    isExpand: boolean
 }
 
-const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) => {
+const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPanelProps) => {
 
     const [ ws, setWs ] = useState<WebSocket | null>(null);
     const [ inputValue, setInputValue ] = useState<string>("");
@@ -130,7 +131,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
 
      // Container (bottom input bar)
     const containerStyle : React.CSSProperties = {
-        padding: "16px",
+        padding: "10px",
         borderTop: "1px solid rgba(255, 255, 255, 0.2)",
         borderColor: theme.fontColor,
         background: theme.backgroundColor,
@@ -167,7 +168,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus } : WSChatPanelProps) =
     return (
         <>
             {webSocketStatus && <p style={websocketstateStyle}>{webSocketStatus}</p>}
-            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} />
+            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} isExpand={isExpand} />
             
             {/* Typing indicator */}
             {

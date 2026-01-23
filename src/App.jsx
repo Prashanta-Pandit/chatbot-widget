@@ -18,7 +18,7 @@ export default function App() {
         fontColor="#000000"
         backgroundColor="#ffffff"  
         position="right"
-        name="Dingo"
+        name="Boki"
         subTitle="Your AI-powered assistant"
         welcomeText="You need`s help? Ask me anything!"
         aiInitialMessage="Welcome to Bayset! What product can I assist you with today?"

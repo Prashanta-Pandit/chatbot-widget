@@ -5,9 +5,10 @@ interface ChatBoxProps {
     messages: string;
     chatBotData: ChatBotData;
     theme: Theme
+    isExpand: boolean;
 }
 
-const WSChatBox = ({ messages, chatBotData, theme, }: ChatBoxProps) => {
+const WSChatBox = ({ messages, chatBotData, theme, isExpand }: ChatBoxProps) => {
     
     const [chats, setChats] = useState<Message[]>([]);
     const messagesEndRef = useRef<HTMLDivElement | null>(null); // ref to the last message
@@ -58,7 +59,7 @@ const WSChatBox = ({ messages, chatBotData, theme, }: ChatBoxProps) => {
     const flatChats = chats.flat();
 
     const containerStyle: React.CSSProperties = {
-        height: "310px",
+        height: isExpand ? "500px" : "310px",
         overflowY: "auto",
         padding: "20px",
         background: theme.backgroundColor,

@@ -97,7 +97,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
   };
 
   const footerStyle: React.CSSProperties = {
-    padding: isExpand ? "30px 20px" : "8px 20px",
+    padding: "10px",
     borderTop: "1px solid rgba(255,255,255,0.2)",
     background: theme.backgroundColor,
     textAlign: "center",
@@ -169,7 +169,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
 
       {/* Main Content */}
       
-      <WSChatPanel chatBotData={chatBotData} theme={theme} onlineStatus={onlineStatus} />
+      <WSChatPanel chatBotData={chatBotData} theme={theme} onlineStatus={onlineStatus} isExpand={isExpand} />
 
       {/* Footer */}
       <div style={footerStyle}>
