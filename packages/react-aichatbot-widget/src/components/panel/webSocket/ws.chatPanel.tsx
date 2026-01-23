@@ -104,7 +104,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPan
         padding: "12px 16px",
         background: theme.backgroundColor,
         color: theme.fontColor,
-        border: `1px solid ${theme.fontColor}`,
+        border: `1px solid ${theme.primaryColor}`,
         borderRadius: "12px",
         fontSize: "14px",
         outline: "none",
@@ -132,7 +132,6 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPan
      // Container (bottom input bar)
     const containerStyle : React.CSSProperties = {
         padding: "10px",
-        borderTop: "1px solid rgba(255, 255, 255, 0.2)",
         borderColor: theme.fontColor,
         background: theme.backgroundColor,
         flexShrink: 0,
@@ -188,12 +187,12 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPan
                         onKeyDown={handleKeyPress}
                         style={inputStyle}
                         onFocus={(e) => {
-                            e.target.style.boxShadow = "0 0 0 3px rgba(100, 150, 255, 0.3)";
-                            e.target.style.borderColor = "#60a5fa";
+                            e.target.style.boxShadow = `0 0 0 1px ${theme.primaryColor}`;
+                            e.target.style.borderColor = theme.primaryColor;
                         }}
                         onBlur={(e) => {
                             e.target.style.boxShadow = "none";
-                            e.target.style.borderColor = theme.fontColor;
+                            e.target.style.borderColor = theme.primaryColor;
                         }}
                     />
                     <button

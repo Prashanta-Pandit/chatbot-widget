@@ -59,15 +59,14 @@ const WSChatBox = ({ messages, chatBotData, theme, isExpand }: ChatBoxProps) => 
     const flatChats = chats.flat();
 
     const containerStyle: React.CSSProperties = {
-        height: isExpand ? "500px" : "310px",
+        height: isExpand ? "500px" : "400px",
         overflowY: "auto",
-        padding: "20px",
+        padding: "10px",
         background: theme.backgroundColor,
         color: theme.fontColor,
         borderTop: "1px solid rgba(255, 255, 255, 0.2)",
         display: "flex",
         flexDirection: "column",
-        gap: "16px",
     };
 
     const messageWrapperStyle = (sender_type: string): React.CSSProperties => ({
@@ -83,8 +82,8 @@ const WSChatBox = ({ messages, chatBotData, theme, isExpand }: ChatBoxProps) => 
     };
 
     const bubbleStyle = (sender_type: string): React.CSSProperties => ({
-        padding: "12px",
-        borderRadius: sender_type === "user" ? "16px 0 16px 16px" : "0 16px 16px 16px",
+        padding: "10px",
+        borderRadius: sender_type === "user" ? "12px 0 12px 12px" : "0 12px 12px 12px",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
         fontSize: "14px",
         lineHeight: "1.5",
@@ -98,25 +97,20 @@ const WSChatBox = ({ messages, chatBotData, theme, isExpand }: ChatBoxProps) => 
             {flatChats.map((chat, index) => (
                 <div key={index} style={messageWrapperStyle(chat.sender_type)}>
                     <div style={bubbleContainerStyle}>
-                        <div style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                            justifyContent: chat.sender_type === "user" ? "flex-end" : "flex-start",
-                            marginRight: "4px",
-                            marginBottom: "2px"
-                        }}>
-                            <span style={{ fontSize: "10px", opacity: 0.55, color: theme.fontColor }}>
-                                {chat.sender_type === "user" ? "You" : `${chatBotData.name}`}
-                            </span>
-                        </div>
-                        
                         <div style={chat.sender_type === "user" ? bubbleStyle("user") : bubbleStyle("ai")}>
                             {chat.message}
                         </div>
-                        <span style={{ fontSize: "10px", opacity: 0.55, color: theme.fontColor, alignSelf: chat.sender_type === "user" ? "flex-end" : "flex-start", marginTop: "4px" }}>
-                                {`${formatTimestamp(chat.created_at)}`}
-                        </span>
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginLeft: "4px",
+                            justifyContent: chat.sender_type === "user" ? "flex-end" : "flex-start",
+                        }}>
+                            <span style={{ fontSize: "10px", opacity: 0.55, color: theme.fontColor }}>
+                                {chat.sender_type === "user" ? "You" : `${chatBotData.name}`}
+                                &nbsp;•&nbsp;{formatTimestamp(chat.created_at)}
+                            </span>
+                        </div>
                     </div>
                 </div>
             ))}
