@@ -32,6 +32,17 @@ const WSChatBox = ({ messages, chatBotData, theme, }: ChatBoxProps) => {
 
     // Add new messages
     useEffect(() => {
+
+        if(messages === "") {
+            setChats([
+            {
+                created_at: Date.now(),
+                sender_type: "bot",
+                message: chatBotData.aiInitialMessage,
+                suggested_prompt: []
+            }
+        ]); 
+        }
         
         const msgObj = convertToJSON(messages);
         if (msgObj) {

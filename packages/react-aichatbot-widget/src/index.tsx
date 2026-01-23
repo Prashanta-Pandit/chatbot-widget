@@ -16,6 +16,7 @@ export interface ChatBotWidgetProps {
     name ?: string;
     subTitle ?: string;
     welcomeText ?: string;
+    aiInitialMessage ?: string;
 }
 
 const ChatBotWidget = ({
@@ -26,9 +27,10 @@ const ChatBotWidget = ({
   fontColor = "#1f2937",
   placeholderColor = "#9ca3af",
   position = "right",
-  name = "Assistant",
-  subTitle = "Typically replies instantly",
-  welcomeText = "Hi! How can I help you today?"
+  name = "AI Assistant",
+  subTitle = "AI powered assistant",
+  welcomeText = "Hi! How can I help you today?",
+  aiInitialMessage = ""
 } : ChatBotWidgetProps ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -55,7 +57,12 @@ const ChatBotWidget = ({
     welcomeText,
     pineconeNamespace,
     position,
+    aiInitialMessage
   };
+
+  if( aiInitialMessage === "" ) {
+    chatBotData.aiInitialMessage = `Hello! I'm ${chatBotData.name}, your AI assistant. How can I help you today?`;
+  }
 
   const isLeft = position === "left";
   const horizontalPos = "32px";

@@ -15,6 +15,7 @@ export interface ChatBotData {
     welcomeText : string;
     pineconeNamespace : string;
     position : string;
+    aiInitialMessage : string;
 }
 
 export interface Message {
