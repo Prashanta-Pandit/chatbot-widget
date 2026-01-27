@@ -1,10 +1,10 @@
 // ChatBotWidget.jsx
-import { useState, useContext } from "react";
+import { useState } from "react";
 import ChatButton from "./components/chat.button.jsx";
 import ChatPanel from "./components/panel/chat.panel.layout.jsx";
 
 import { Theme, ChatBotData  } from './components/types/types';
-
+ 
 export interface ChatBotWidgetProps {
     pineconeNamespace : string;
     primaryColor ?: string;
@@ -34,12 +34,11 @@ const ChatBotWidget = ({
 } : ChatBotWidgetProps ) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const onClose = () => {
-    setIsOpen(prev => !prev);
-    localStorage.removeItem('clone67ChatSessionId'); // remove the session id. 
-  }
-
   const onMinimise = () => setIsOpen(prev => !prev);
+
+  const onClose = () => {
+    setIsOpen(false);
+  }
 
   const theme : Theme = {
     primaryColor,
@@ -87,24 +86,24 @@ const ChatBotWidget = ({
 
   return (
     <>
-      {isOpen && (
-        <div style={panelWrapperStyle}>
-          <ChatPanel
-            onClose={onClose}
+        {isOpen && (
+          <div style={panelWrapperStyle}>
+            <ChatPanel
+              onClose={onClose}
+              theme={theme}
+              chatBotData={chatBotData}
+            />
+          </div>
+        )}
+
+        <div style={buttonWrapperStyle}>
+          <ChatButton
+            onMinimise={onMinimise}
+            isOpen={isOpen}
             theme={theme}
             chatBotData={chatBotData}
           />
         </div>
-      )}
-
-      <div style={buttonWrapperStyle}>
-        <ChatButton
-          onMinimise={onMinimise}
-          isOpen={isOpen}
-          theme={theme}
-          chatBotData={chatBotData}
-        />
-      </div>
     </>
   );
 };

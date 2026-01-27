@@ -1,7 +1,7 @@
 import React, {useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ChatBox from './ws.chatBox';
-import { handleWebSocket } from './ws';
+import { handleWebSocket } from '../../../utils/ws';
 import { ChatBotData, Theme } from '../../types/types';
 import { Send } from "lucide-react";
 
@@ -10,9 +10,10 @@ interface WSChatPanelProps {
     theme: Theme
     onlineStatus: (status : string) => void
     isExpand: boolean
+    endSession: boolean
 }
 
-const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPanelProps) => {
+const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession } : WSChatPanelProps) => {
 
     const [ ws, setWs ] = useState<WebSocket | null>(null);
     const [ inputValue, setInputValue ] = useState<string>("");
@@ -48,7 +49,6 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPan
             try {
                 const messages = await event.data;
                 setMessages(messages);
-
                 setIsLoading(false);
 
             } catch (err) {
@@ -70,11 +70,30 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPan
 
     }, []);
 
+    useEffect(()=> {
+        if (!endSession) return;
+
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            const payload = {
+                type: "end_session"
+            }
+            ws.send(JSON.stringify(payload));  
+            ws.close(); 
+            localStorage.removeItem('clone67ChatSessionId'); // remove the local storage.  
+        }
+
+    }, [endSession]);
+
     const handleSubmit = async (e : any) => {
         e.preventDefault();
 
         if(ws && ws.readyState === WebSocket.OPEN){
-             ws.send(JSON.stringify(inputValue));
+            // declare the websocket request as a user message
+            const payload = {
+                type: 'chat',
+                userInput: inputValue
+            }
+            ws.send(JSON.stringify(payload));
         }
 
         // AI starts processing
@@ -88,7 +107,6 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPan
         };
 
         setMessages( JSON.stringify(userMessage) ); // append user message to message state.
-
         setInputValue("");
     }
 
@@ -163,6 +181,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand } : WSChatPan
         fontSize: "10px",
         color: theme.fontColor,
     };
+
 
     return (
         <>

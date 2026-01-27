@@ -5,15 +5,16 @@ import WSChatPanel from './webSocket/ws.chatPanel';
 import { ChatBotData, Theme } from "../types/types";
 
 interface ChatPanelProps {
-  onClose: () => void;
   theme: Theme;
   chatBotData: ChatBotData;
+  onClose: () => void
 }
 
-const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
+const ChatPanel = ({ theme, chatBotData, onClose }: ChatPanelProps) => {
 
-  const [isExpand, setIsExpand] = useState<boolean>(false);
+  const [ isExpand, setIsExpand ] = useState<boolean>(false);
   const [ isOnline, setIsOnline ] = useState<boolean>(false);
+  const [ endSession, setEndSession ] = useState<boolean>(false);
 
   const isLeft = chatBotData.position === "left";
 
@@ -126,6 +127,8 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
     }
   }
 
+
+
   return (
     <div style={panelStyle}>
 
@@ -156,8 +159,10 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
           </button>
 
           <button
-            onClick={onClose}
-            aria-label="close chat"
+            onClick={()=> { 
+              setEndSession(true);
+              onClose();
+            }}
             style={topButtonStyle}
             onMouseEnter={(e) => handleTopButtonHover(e, true)}
             onMouseLeave={(e) => handleTopButtonHover(e, false)}
@@ -169,7 +174,7 @@ const ChatPanel = ({ onClose, theme, chatBotData }: ChatPanelProps) => {
 
       {/* Main Content */}
       
-      <WSChatPanel chatBotData={chatBotData} theme={theme} onlineStatus={onlineStatus} isExpand={isExpand} />
+      <WSChatPanel chatBotData={chatBotData} theme={theme} onlineStatus={onlineStatus} isExpand={isExpand} endSession={endSession} />
 
       {/* Footer */}
       <div style={footerStyle}>
