@@ -161,7 +161,11 @@ const ChatPanel = ({ theme, chatBotData, onClose }: ChatPanelProps) => {
           <button
             onClick={()=> { 
               setEndSession(true);
-              onClose();
+              //delay the onclose for 2 sec just to make the app reload. 
+              setTimeout(()=> {
+                  onClose();
+              }, 2000);
+              
             }}
             style={topButtonStyle}
             onMouseEnter={(e) => handleTopButtonHover(e, true)}

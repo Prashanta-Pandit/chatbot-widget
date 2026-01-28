@@ -1,6 +1,7 @@
 import React, {useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import ChatBox from './ws.chatBox';
+import WSChatBox from './ws.chatBox';
+import WSExitChat from './ws.exitchat';
 import { handleWebSocket } from '../../../utils/ws';
 import { ChatBotData, Theme } from '../../types/types';
 import { Send } from "lucide-react";
@@ -71,7 +72,8 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
     }, []);
 
     useEffect(()=> {
-        if (!endSession) return;
+
+        if (!endSession) return; // here is the issue, the page doensot get change to render if the onClose is triggred. 
 
         if (ws && ws.readyState === WebSocket.OPEN) {
             const payload = {
@@ -120,7 +122,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
     const inputStyle : React.CSSProperties = {
         flex: 1,
         padding: "12px 16px",
-        background: theme.backgroundColor,
+        background: `${isLoading ? `${theme.primaryColor}33` : theme.backgroundColor}`,
         color: theme.fontColor,
         border: `1px solid ${theme.primaryColor}`,
         borderRadius: "12px",
@@ -128,13 +130,15 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
         outline: "none",
         transition: "all 0.2s ease",
         boxShadow: "none",
+        cursor: isLoading ? "not-allowed" : "auto"
+        
     };
     
       // Send button
     const buttonStyle : React.CSSProperties = {
         padding: "12px 20px",
         borderRadius: "12px",
-        background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})`,
+        background: isLoading ? `${theme.primaryColor}33` : `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})` ,
         color: theme.fontColor,
         border: "none",
         display: "flex",
@@ -145,6 +149,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
         fontSize: "14px",
         transition: "all 0.2s ease",
         minWidth: "48px",
+        cursor: isLoading ? "not-allowed" : "pointer",
     };
 
      // Container (bottom input bar)
@@ -186,43 +191,50 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
     return (
         <>
             {webSocketStatus && <p style={websocketstateStyle}>{webSocketStatus}</p>}
-            <ChatBox  messages={messages} chatBotData={chatBotData} theme={theme} isExpand={isExpand} />
-            
-            {/* Typing indicator */}
-            {
-                isLoading && 
-                <div style={typingStyle}>
-                    {`${chatBotData.name} is typing...`}
-                </div>
-            }
 
-            <div style={containerStyle}>
-                <form onSubmit={handleSubmit} style={wrapperStyle}>
-                    <input
-                        type="text"
-                        placeholder="Type a message..."
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onKeyDown={handleKeyPress}
-                        style={inputStyle}
-                        onFocus={(e) => {
-                            e.target.style.boxShadow = `0 0 0 1px ${theme.primaryColor}`;
-                            e.target.style.borderColor = theme.primaryColor;
-                        }}
-                        onBlur={(e) => {
-                            e.target.style.boxShadow = "none";
-                            e.target.style.borderColor = theme.primaryColor;
-                        }}
-                    />
-                    <button
-                        onClick={handleSubmit}
-                        style={buttonStyle}
-                        aria-label="Send message"
-                        >
-                        <Send size={18} />
-                    </button>
-                </form>
-            </div>
+            {
+                endSession ? <WSExitChat theme={theme} /> : 
+                <>
+                    <WSChatBox  messages={messages} chatBotData={chatBotData} theme={theme} isExpand={isExpand} />
+                    {/* Typing indicator */}
+                    {
+                        isLoading && 
+                        <div style={typingStyle}>
+                            {`${chatBotData.name} is typing...`}
+                        </div>
+                    }
+
+                    <div style={containerStyle}>
+                        <form onSubmit={handleSubmit} style={wrapperStyle}>
+                            <input
+                                type="text"
+                                placeholder="Type a message..."
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                disabled={isLoading}
+                                onKeyDown={handleKeyPress}
+                                style={inputStyle}
+                                onFocus={(e) => {
+                                    e.target.style.boxShadow = `0 0 0 1px ${theme.primaryColor}`;
+                                    e.target.style.borderColor = theme.primaryColor;
+                                }}
+                                onBlur={(e) => {
+                                    e.target.style.boxShadow = "none";
+                                    e.target.style.borderColor = theme.primaryColor;
+                                }}
+                            />
+                            <button
+                                onClick={handleSubmit}
+                                style={buttonStyle}
+                                disabled={isLoading}
+                                aria-label="Send message"
+                                >
+                                <Send size={18} />
+                            </button>
+                        </form>
+                    </div>
+                </>
+            }
         </>
     )
 }
