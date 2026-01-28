@@ -52,6 +52,7 @@ function App() {
         name=""               // any name
         subTitle=""           // any subtitle
         welcomeText=""        // any welcome text 
+        aiInitialMessage=""
       />
     </div>
   );
