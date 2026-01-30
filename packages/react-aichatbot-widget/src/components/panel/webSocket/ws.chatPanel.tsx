@@ -5,6 +5,7 @@ import WSExitChat from './ws.exitchat';
 import { handleWebSocket } from '../../../utils/ws';
 import { ChatBotData, Theme } from '../../types/types';
 import { Send } from "lucide-react";
+import { handleSaveMessages } from '../../../utils/n8n';
 
 interface WSChatPanelProps {
     chatBotData: ChatBotData
@@ -73,16 +74,28 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
 
     useEffect(()=> {
 
-        if (!endSession) return; // here is the issue, the page doensot get change to render if the onClose is triggred. 
+        const closeSession = async () => {
+            if (!endSession) return;
 
-        if (ws && ws.readyState === WebSocket.OPEN) {
-            const payload = {
-                type: "end_session"
+            const sessionId: any = localStorage.getItem("clone67ChatSessionId");
+            console.log('messagese are:', messages);
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                try {
+                    if (messages) {
+                        await handleSaveMessages(sessionId);
+                    }
+                    
+                    ws.send(JSON.stringify({ type: "end_session" }));
+                    ws.close();
+                    localStorage.removeItem("clone67ChatSessionId");
+                } catch (error) {
+                    console.log("Error while saving messages", error);
+                }
             }
-            ws.send(JSON.stringify(payload));  
-            ws.close(); 
-            localStorage.removeItem('clone67ChatSessionId'); // remove the local storage.  
         }
+
+        closeSession();
 
     }, [endSession]);
 
