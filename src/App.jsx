@@ -5,7 +5,7 @@ export default function App() {
   return (
     <>
       <ChatBotWidget
-        pineconeNamespace="cloney-1e018f87-e5bc-480e-95c3-739809a0c47d"
+        pineconeNamespace="cloey-ab6eeec5-112b-4340-b9e2-1a5c34c800e8"
         primaryColor="#edd11a"      
         secondaryColor="#edd11a"
         fontColor="#000000"

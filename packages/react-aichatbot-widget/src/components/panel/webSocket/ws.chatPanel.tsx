@@ -78,12 +78,11 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
             if (!endSession) return;
 
             const sessionId: any = localStorage.getItem("clone67ChatSessionId");
-            console.log('messagese are:', messages);
 
             if (ws && ws.readyState === WebSocket.OPEN) {
                 try {
                     if (messages) {
-                        await handleSaveMessages(sessionId);
+                        await handleSaveMessages(sessionId, chatBotData.pineconeNamespace);
                     }
                     
                     ws.send(JSON.stringify({ type: "end_session" }));
