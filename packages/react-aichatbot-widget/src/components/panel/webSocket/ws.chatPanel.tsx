@@ -50,6 +50,7 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
         socket.onmessage = async (event) => {
             try {
                 const messages = await event.data;
+                
                 setMessages(messages);
                 setIsLoading(false);
 
