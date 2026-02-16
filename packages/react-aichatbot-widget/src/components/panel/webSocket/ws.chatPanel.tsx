@@ -5,7 +5,6 @@ import WSExitChat from './ws.exitchat';
 import { handleWebSocket } from '../../../utils/ws';
 import { ChatBotData, Theme } from '../../types/types';
 import { Send } from "lucide-react";
-import { handleSaveMessages } from '../../../utils/n8n';
 
 interface WSChatPanelProps {
     chatBotData: ChatBotData
@@ -77,14 +76,8 @@ const WSChatPanel = ( { chatBotData, theme, onlineStatus, isExpand, endSession }
         const closeSession = async () => {
             if (!endSession) return;
 
-            const sessionId: any = localStorage.getItem("clone67ChatSessionId");
-
             if (ws && ws.readyState === WebSocket.OPEN) {
                 try {
-                    if (messages) {
-                        await handleSaveMessages(sessionId, chatBotData.pineconeNamespace);
-                    }
-                    
                     ws.send(JSON.stringify({ type: "end_session" }));
                     ws.close();
                     localStorage.removeItem("clone67ChatSessionId");
